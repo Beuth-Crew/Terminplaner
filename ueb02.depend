@@ -1,0 +1,77 @@
+# depslib dependency file v1.0
+1365716551 source:/Users/sven/Desktop/Dropbox/Info/Sv/ueb02/calendar.c
+	"calendar.h"
+	"tools.h"
+	"datastructure.h"
+	<stdio.h>
+
+1365712226 /Users/sven/Desktop/Dropbox/Info/Sv/ueb02/calendar.h
+
+1365716562 source:/Users/sven/Desktop/Dropbox/Info/Sv/ueb02/dateutils.c
+	"tools.h"
+	"dateutils.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1365715141 /Users/sven/Desktop/Dropbox/Info/Sv/ueb02/tools.h
+
+1365247318 /Users/sven/Desktop/Dropbox/Info/Sv/ueb02/dateutils.h
+
+1365710991 source:/Users/sven/Desktop/Dropbox/Info/Sv/ueb02/main.c
+
+1365716616 source:/Users/sven/Desktop/Dropbox/Info/Sv/ueb02/menu.c
+	"menu.h"
+	"tools.h"
+	<stdio.h>
+
+1365707966 /Users/sven/Desktop/Dropbox/Info/Sv/ueb02/menu.h
+
+1365716217 source:/Users/sven/Desktop/Dropbox/Info/Sv/ueb02/tools.c
+	"OS.h"
+	<stdio.h>
+	"tools.h"
+	<stdlib.h>
+
+1365250135 /Users/sven/Desktop/Dropbox/Info/Sv/ueb02/OS.h
+
+1365716451 /Users/sven/Desktop/Dropbox/Info/Sv/ueb02/datastructure.h
+
+1365716708 source:c:\users\s791567\dropbox\info\sv\ueb02\calendar.c
+	"calendar.h"
+	"tools.h"
+	"datastructure.h"
+	<stdio.h>
+
+1365712226 c:\users\s791567\dropbox\info\sv\ueb02\calendar.h
+
+1365715141 c:\users\s791567\dropbox\info\sv\ueb02\tools.h
+
+1365716734 c:\users\s791567\dropbox\info\sv\ueb02\datastructure.h
+
+1365716562 source:c:\users\s791567\dropbox\info\sv\ueb02\dateutils.c
+	"tools.h"
+	"dateutils.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+
+1365247318 c:\users\s791567\dropbox\info\sv\ueb02\dateutils.h
+
+1365710991 source:c:\users\s791567\dropbox\info\sv\ueb02\main.c
+
+1365716616 source:c:\users\s791567\dropbox\info\sv\ueb02\menu.c
+	"menu.h"
+	"tools.h"
+	<stdio.h>
+
+1365707966 c:\users\s791567\dropbox\info\sv\ueb02\menu.h
+
+1365716683 source:c:\users\s791567\dropbox\info\sv\ueb02\tools.c
+	"OS.h"
+	<stdio.h>
+	"tools.h"
+	<stdlib.h>
+
+1365250135 c:\users\s791567\dropbox\info\sv\ueb02\os.h
+

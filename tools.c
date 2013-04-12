@@ -1,114 +1,98 @@
+
+#include "OS.h"
 #include <stdio.h>
 #include "tools.h"
-//#include "escapesequenzen.h"
+#include <stdlib.h>
 
-/*int InputOutput(int *Zeichenzaehler, unsigned char *Texteingabe)
+/*
+    Statische Funktion, die einen Fehlertext in der Konsole ausgibt.
+*/
+static void printErrorMessage()
 {
-	int i = 0;													//Counter um alle Positionen des strings durchzugehen
-	int j = -1;													//Counter um alle ASCII-Zeichen auf auftreten im Zeichenzaehler zu pruefen
-	int k =  0;													//Counter um die Zeilenumbrueche der Ausgabe-Tabelle zu steuern
-	int r =  0;
-
-	while (*(Texteingabe + i))
-	{
-		if(*(Texteingabe + i) >= 'A' && *(Texteingabe + i) <= 'Z')
-		{
-			*(Zeichenzaehler + *(Texteingabe + i) + 32) = *(Zeichenzaehler + *(Texteingabe + i) + 32) + 1;
-			//Zeichenzaehler[Texteingabe[i]+32] = Zeichenzaehler[Texteingabe[i]+32] + 1;
-		}
-
-		else
-		{
-			*(Zeichenzaehler + *(Texteingabe + i)) = *(Zeichenzaehler + *(Texteingabe + i)) + 1;
-			//Zeichenzaehler[Texteingabe[i]] = Zeichenzaehler[Texteingabe[i]] + 1;
-		}
-		i++;
-	}
-	*(Zeichenzaehler + *(Texteingabe + i)) = 0;
-
-	printf("\nAnzahl der Zeichen:\n");
-	printf("-------------------------------------------------------------\n");
-
-	while (++j <= 256)
-	{
-		if (*(Zeichenzaehler + j) != -1 && j != 0 && j != 10)
-		{
-			if (j <= 32)
-			{
-				printf("|   (%#.2x): %2i ", j, *(Zeichenzaehler + j) + 1);
-			} else
-			{
-				printf("| %c (%#.2x): %2i ", j, j, *(Zeichenzaehler + j) + 1);
-			}
-			k++;
-			if (!(k % 4))
-			{
-				printf("|\n");
-				k = 0;
-				r++;
-			}
-		}
-	}
-
-	if (k > 0)
-	{
-		for ( ; k < 4; k++)
-			printf("|              ");
-		printf("|\n");
-		r++;
-	}
-
-	printf("-------------------------------------------------------------\n");
-
-	return r;
-
-}*/
-
-int askAgain()
-{
-	int weiter;
-	int auswahlGetroffen;
-	char eingabe;
-
-	do
-	{
-		printf("MÃ¶chten Sie noch einmal j/n ");
-		auswahlGetroffen = scanf("%c", &eingabe);
-
-		if( eingabe!='\n')
-		{
-			clearBuffer();
-		}
-		if(!auswahlGetroffen)
-		{
-			printf("Sie haben nicht j oder n eingegeben");
-		}
-		else
-		{
-			switch (eingabe)
-			{
-				case 'j':
-				case 'J':
-				    weiter = 1; break;
-
-				case 'n':
-				case 'N':
-				    weiter = 0; break;
-
-				default:
-					auswahlGetroffen = 0;
-			}
-		}
-	} while (!auswahlGetroffen);
-	return weiter;
+   printf("Ungueltige Eingabe");
 }
 
+/*
+    Macht das Konsolenfenster wieder schön leer.
+*/
+void clearScreen()
+{
+    #ifdef _WINDOWS_
+        system("cls");
+    #endif // _WINDOWS_
+
+    #ifdef _LINUX_OSX_
+        system("clear");
+    #endif // _LINUX_
+}
+
+/*
+    Leert den Tastaturpuffer.
+*/
 void clearBuffer()
 {
-	char Dummy;
-	do
-	{
-		scanf("%c", &Dummy);
-	} while (Dummy != '\n');
+   char x;
+   do
+      scanf("%c", &x);
+   while (x != '\n');
+}
 
+/*
+    Fragt den Benutzer, ob er noch ein mal möchte.
+    Der Benutzer kann daraufhin eine Antwort eingeben. Bei 'j' oder 'J' wird
+    der Wert 1 zurückgegeben. Bei 'n' oder 'N' wird 0 zurückgegeben.
+    Andere Eingaben führen zu einer Fehlermeldung und wiederholter
+    Benutzereingabe.
+*/
+int askAgain()
+{
+   int anzGelesen;
+   char eingabe;
+
+   do
+   {
+      printf("Moechten Sie noch einmal (j/n)? ");
+
+      // Benutzereingabe einlesen
+      anzGelesen = scanf("%c", &eingabe); // Ein Zeichen einlesen
+      if (eingabe != '\n')
+         clearBuffer();
+
+      // Eingabe überprüfen
+      if (anzGelesen != 1)
+         printErrorMessage(); // Fehlermeldung hinter dem Eingabecursor ausgeben
+      else
+      {
+         // Gültige Antworten auf die Frage sind 'j', 'J', 'n' und 'N'.
+         switch (eingabe)
+         {
+            case 'j':
+            case 'J':
+               return 1;
+
+            case 'n':
+            case 'N':
+               return 0;
+
+            default:
+               printErrorMessage(); // Fehlermeldung hinter dem Eingabecursor ausgeben
+         }
+      }
+   } while (1);
+
+   // Wird nie erreicht:
+   return 0;
+}
+
+/*
+    Lässt den Benutzer Zeichen über die Tastatur eingeben.
+    Die Funktion wird beendet, sobald der Benutzer [Enter] drückt.
+*/
+void waitForEnter()
+{
+    // todo testen
+    printf("Bitte Eingabetaste druecken ...");
+    char x[2];
+    scanf("%1[^\n]", x);
+    clearBuffer();
 }
