@@ -6,8 +6,19 @@
 ####
 ## C
 ####
+obj/
+bin/
 *.o
 *.exe
+
+# Linux- bzw. OSX-Files
+ueb1
+ueb2
+ueb3
+ueb4
+ueb5
+ueb6
+ueb7
 
 #################
 ## Eclipse
