@@ -5,7 +5,7 @@ int isLeapYear(int jahr);
 
 int isDateValid(int tag, int monat, int jahr);
 
-int getDateFromString(char *datum, int *tag, int *monat, int *jahr);
+int getDateFromString(char const *datum, int *tag, int *monat, int *jahr);
 
 int getDate(char const *prompt, int *tag, int *monat, int *jahr);
 

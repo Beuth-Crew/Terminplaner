@@ -6,7 +6,7 @@
 typedef enum /* 0 - 6 */
 {
   So = 0, Mo, Di, Mi, Do, Fr, Sa
-} Weekday;
+} DayOfWeek;
 
 typedef struct
 {
@@ -19,7 +19,7 @@ typedef struct
     unsigned short day;
     unsigned short month;
     unsigned short year;
-    Weekday weekday;
+    DayOfWeek dayOfWeek;
 } TDate;
 
 typedef struct

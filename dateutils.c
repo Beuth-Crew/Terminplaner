@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
 
 
 /*
@@ -97,37 +98,48 @@ int isDateValid(int tag, int monat, int jahr)
 
     Hinweis: Die übergebene Zeichenkette wird in der Funktion verändert.
 */
-int getDateFromString(char *datum, int *tag, int *monat, int *jahr)
+int getDateFromString(char const *datum, int *tag, int *monat, int *jahr)
 {
     char *cTag = NULL, *cMonat = NULL, *cJahr = NULL; // Tag, Monat, Jahr als Teilstring von datum
     int d, m, y; // Tag, Monat, Jahr
     unsigned short anzPunkte = 0; // Es dürfen maximal zwei Punkte vorkommen
+    char *date; // = datum (Parameter)
 
-    while (*datum != '\0')
+    // Datum kopieren, damit der übergebene String nicht verändert werden muss, sondern nur der lokale.
+    date = malloc(sizeof(char) * strlen(datum));
+    strcpy(date, datum);
+
+    while (*date != '\0')
     {
-        if (*datum >= '0' && *datum <= '9')
+        if (*date >= '0' && *date <= '9')
         {
             if (cTag == NULL)
-                cTag = datum; // Der Tag ist noch nicht gesetzt. Er kommt als erstes.
+                cTag = date; // Der Tag ist noch nicht gesetzt. Er kommt als erstes.
             else if (cMonat == NULL)
-                cMonat = datum; // Der Monat ist noch nicht gesetzt. Er kommt als zweites.
+                cMonat = date; // Der Monat ist noch nicht gesetzt. Er kommt als zweites.
             else if (cJahr == NULL)
-                cJahr = datum; // Das Jahr ist noch nicht gesetzt. Es kommt als letztes.
+                cJahr = date; // Das Jahr ist noch nicht gesetzt. Es kommt als letztes.
             else
+            {
+                free(date);
                 return 0;
+            }
 
-            while ((*(datum + 1) >= '0' && *(datum + 1) <= '9') && *(datum + 1) != '\0') // Die Zahl bis zum Ende durchlaufen
-                ++datum;
+            while ((*(date + 1) >= '0' && *(date + 1) <= '9') && *(date + 1) != '\0') // Die Zahl bis zum Ende durchlaufen
+                ++date;
         }
-        else if (*datum == '.')
+        else if (*date == '.')
         {
             ++anzPunkte;
-            *datum = '\0'; // Punkte werden durch \0 ersetzt.
+            *date = '\0'; // Punkte werden durch \0 ersetzt.
         }
         else
+        {
+            free(date);
             return 0; // Es ist ein ungŸltiges Zeichen enthalten.
+        }
 
-        ++datum;
+        ++date;
     }
 
     if (cTag == NULL || cMonat == NULL || cJahr == NULL)
@@ -147,6 +159,7 @@ int getDateFromString(char *datum, int *tag, int *monat, int *jahr)
     *monat  = m;
     *jahr   = y;
 
+    free(date);
     return 1;
 }
 
