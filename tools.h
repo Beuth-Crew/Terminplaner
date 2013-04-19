@@ -5,6 +5,7 @@ void clearScreen();
 void clearBuffer();
 int askAgain();
 void waitForEnter();
+void printLine(char symbol, int lineLength);
 
 #endif
 

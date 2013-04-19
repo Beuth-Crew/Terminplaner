@@ -96,3 +96,13 @@ void waitForEnter()
     scanf("%1[^\n]", x);
     clearBuffer();
 }
+
+void printLine(char symbol, int lineLength)
+{
+    int i = 0;
+
+    for(i = 0; i = lineLength; i++)
+    {
+        printf(symbol);
+    }
+}
