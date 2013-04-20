@@ -35,9 +35,6 @@ int main()
             case 7: printf("Das Programm wird beendet");    break;
         }
 
-        printf("\n\n");
-        waitForEnter();
-
     } while(selection != 7);
 
     return 0;
