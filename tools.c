@@ -97,12 +97,12 @@ void waitForEnter()
     clearBuffer();
 }
 
-void printLine(char symbol, int lineLength)
+void printLine(char printChar, int lineLength)
 {
     int i = 0;
 
     for(i = 0; i = lineLength; i++)
     {
-        printf(symbol);
+        printf(printChar);
     }
 }
