@@ -1,20 +1,16 @@
-Yau, hier ist unser (missbrauchtes) README:
-
-- Was ist mit den '(In Konflikt...'-Files??
-
-- kp. Löschen?
-
 Offene Punkte zur naechsten Abgabe (2013-04-26):
 
 - Kommentieren Sie das Programm. Dazu gehört auch ein Modulheader und zu jeder Funktion ein Funktionsheader (siehe Skript “Grundlagen der Informatik“ Kapitel 5.3 und 5.4)!
 --- Modulheader wurden ergaenzt, *.c-Files muessen z.T. noch kommentiert werden
+
 - z.T. sind parameter noch auf Deutsch
+
 - sonst sollte fuer die Abgabe alles drin sein. Bitte jemand anderen nochmal drueber zu kucken. Danke.
 =======
 - sollte fuer die Abgabe alles drin sein. Bitte jemand anderen nochmal drueber zu kucken. Danke.
 
 - Hab drüber geguckt.
 Hab drübergeguckt. Die printLine-Funktion hast du nich getestet, wie ich sehe :)
-
+--Ja, hast recht. Mach ich nochmal.
 
 - Diese shice .layout-File geht immer mit rüber!
