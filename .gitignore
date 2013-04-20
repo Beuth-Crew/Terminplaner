@@ -1,6 +1,7 @@
 ##############
 ## Code Blocks
 ##############
+*.depend
 *.layout
 
 ####
@@ -184,7 +185,3 @@ pip-log.txt
 # Mac crap
 .DS_Store
 *.DS_Store
-
-*.depend
-
-*.layout

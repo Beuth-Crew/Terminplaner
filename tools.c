@@ -81,7 +81,7 @@ int askAgain()
    } while (1);
 
    // Wird nie erreicht:
-   return 0;
+   return 0; // Nur um den Compiler zu beruhigen
 }
 
 /*
@@ -90,19 +90,22 @@ int askAgain()
 */
 void waitForEnter()
 {
-    // todo testen
+    char x[2]; // 1 Zeichen + '\0'
+
     printf("Bitte Eingabetaste druecken ...");
-    char x[2];
     scanf("%1[^\n]", x);
     clearBuffer();
 }
 
+/*
+    Gibt das übergebene Zeichen so oft hintereinander aus, wie im zweiten Parameter angegben wurde.
+*/
 void printLine(char printChar, int lineLength)
 {
-    int i = 0;
+    int i;
 
-    for(i = 0; i = lineLength; i++)
-    {
-        printf(printChar);
-    }
+    for(i = 0; i < lineLength; i++)
+        printf("%c", printChar);
+
+    printf("\n");
 }
