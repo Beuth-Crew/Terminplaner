@@ -164,3 +164,49 @@
 	<stdio.h>
 	<string.h>
 
+1366972200 source:z:\terminplaner\calendar.c
+	"calendar.h"
+	"tools.h"
+	"datastructure.h"
+	<stdio.h>
+
+1366972200 z:\terminplaner\calendar.h
+
+1366972200 z:\terminplaner\tools.h
+
+1366972200 z:\terminplaner\datastructure.h
+
+1366972200 source:z:\terminplaner\dateutils.c
+	"tools.h"
+	"dateutils.h"
+	<stdio.h>
+	<stdlib.h>
+	<errno.h>
+	<string.h>
+
+1366972200 z:\terminplaner\dateutils.h
+
+1366972200 source:z:\terminplaner\main.c
+	"Menu.h"
+	"tools.h"
+	<stdio.h>
+	<string.h>
+	"calendar.h"
+
+1366972200 z:\terminplaner\menu.h
+
+1366972200 source:z:\terminplaner\menu.c
+	"menu.h"
+	"tools.h"
+	<stdio.h>
+	<assert.h>
+	<string.h>
+
+1366972200 source:z:\terminplaner\tools.c
+	"OS.h"
+	<stdio.h>
+	"tools.h"
+	<stdlib.h>
+
+1366972526 z:\terminplaner\os.h
+
