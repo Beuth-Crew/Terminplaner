@@ -23,6 +23,7 @@
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-DNDEBUG" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -42,9 +43,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="dateutils.h" />
-		<Unit filename="main.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -53,6 +51,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="tools.h" />
+		<Unit filename="ueb2.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="ueb3.c">
 			<Option compilerVar="CC" />
 		</Unit>

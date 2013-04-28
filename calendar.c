@@ -3,6 +3,7 @@
 #include "tools.h"
 #include "datastructure.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 // Globale Variablen (pfui)
 unsigned short AppointmentCount = 0;
@@ -42,4 +43,14 @@ void listCalendar()
 {
     printf("listCalendar()\n\n");
     waitForEnter();
+}
+
+void freeAppointment(TAppointment *appointment)
+{
+    free(appointment->time);
+    free(appointment->description);
+    free(appointment->date);
+    free(appointment->duration);
+    free(appointment->location);
+    free(appointment);
 }

@@ -1,6 +1,8 @@
 #ifndef DATEUTILS_H_INCLUDED
 #define DATEUTILS_H_INCLUDED
 
+#include "datastructure.h"
+
 int isLeapYear(int jahr);
 /******************************************************
  * FUNCTION:                isLeapYear
@@ -22,7 +24,7 @@ int isLeapYear(int jahr);
  * CHANGES     :            -
  ******************************************************/
 
-int isDateValid(int tag, int monat, int jahr);
+int isDateValid(TDate const *date);
 /******************************************************
  * FUNCTION:                isDateValid
  *-----------------------------------------------------
@@ -42,27 +44,25 @@ int isDateValid(int tag, int monat, int jahr);
  * CHANGES     :            -
  ******************************************************/
 
-int getDateFromString(char const *datum, int *tag, int *monat, int *jahr);
+int getDateFromString(char const *datum, TDate *date);
 /******************************************************
  * FUNCTION:                getDateFromString
  *-----------------------------------------------------
  * DESCRIPTION:             Parst ein Datum aus einer Zeichenkette.
  * FIELD OF APPLICATION:    Local
  * PARAMETER:               char const *datum
- *                          int *tag
- *                          int *monat
- *                          int *jahr
+ *                          TDate *date
  * TYP OF RESULT:           int
  * VALUE OF RESULT:
- *   -> NORMAL CASE:        1 (Datum richtig geparst)
- *   -> FAULT  CASE:        0 (Datum konnte nicht geparst werden)
+ *   -> NORMAL CASE:        1 (Datum richtig geparst & Datum existiert)
+ *   -> FAULT  CASE:        0 (Datum konnte nicht geparst werden oder Datum existiert nicht)
  *-----------------------------------------------------
  * DEVELOPED BY:            Seven Hallmann
  *           AT:            2013-04-13
  * CHANGES     :            -
  ******************************************************/
 
-int getDate(char const *prompt, int *tag, int *monat, int *jahr);
+int getDate(char const *prompt, TDate **date);
 /******************************************************
  * FUNCTION:                getDate
  *-----------------------------------------------------
@@ -71,17 +71,32 @@ int getDate(char const *prompt, int *tag, int *monat, int *jahr);
  *                          vom Benutzer ein.
  * FIELD OF APPLICATION:    Local
  * PARAMETER:               char const *prompt
- *                          int *tag
- *                          int *monat
- *                          int *jahr
+ *                          date - enthält im falle einer korrekten
+ *                          Benutzereingabe das eingegebene Datum.
  * TYP OF RESULT:           int
  * VALUE OF RESULT:
- *   -> NORMAL CASE:        1 (Datum richtig geparst)
+ *   -> NORMAL CASE:        1 (Datum richtig geparst & Datum existiert)
  *   -> FAULT CASE:         0 (Datum konnte nicht geparst werden)
  *-----------------------------------------------------
  * DEVELOPED BY:            Seven Hallmann
  *           AT:            2013-04-13
  * CHANGES     :            -
  ******************************************************/
+
+/*
+    Rückgabe:
+    - bei 0: "Sonntag"
+    - bei 1: "Monatag"
+    - bei 2: "Dienstag"
+    ... usw ...
+
+    Parameter:
+        str             Zeichenkette, in welche der Wochentag geschrieben wird.
+        dayOfWeek       Wochentag in Form einer Ziffer 0 -> So, 1 -> Mo, usw.
+        shortForm       0 - bedeutet, dass lange Bezeichnungen zurückgegeben werden.
+                        1 - bedeutet, dass kurze Bezeichnungen zurückgegeben werden,
+                            also z.B. "Mo" anstatt "Montag"
+*/
+void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
 
 #endif // DATEUTILS_H_INCLUDED
