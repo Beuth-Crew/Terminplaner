@@ -3,6 +3,7 @@
 #include "tools.h"
 #include "calendar.h"
 #include "dateutils.h"
+#include "animation.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -27,13 +28,13 @@ int main()
 
         switch(selection)
         {
-            case 1: createAppointment();                    break;
-            case 2: editAppointment();                      break;
-            case 3: deleteAppointment();                    break;
-            case 4: searchAppointment();                    break;
-            case 5: sortCalendar();                         break;
-            case 6: listCalendar();                         break;
-            case 7: printf("Das Programm wird beendet");    break;
+            case 1: createAppointment();                            break;
+            case 2: editAppointment();                              break;
+            case 3: deleteAppointment();                            break;
+            case 4: searchAppointment();                            break;
+            case 5: sortCalendar();                                 break;
+            case 6: listCalendar();                                 break;
+            case 7: animi_out("Das Programm wird beendet", 30);     break;
         }
 
     } while(selection != 7);

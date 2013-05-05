@@ -34,6 +34,10 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="OS.h" />
+		<Unit filename="animation.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="animation.h" />
 		<Unit filename="calendar.c">
 			<Option compilerVar="CC" />
 		</Unit>

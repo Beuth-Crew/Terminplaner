@@ -101,10 +101,10 @@ int getText(char const *prompt, unsigned short maxLen, char **str)
     if (eingabe)
     {
         sprintf(format, "%%%hu[^\n]", maxLen);
-        printf(format);
+        printf("%s", format);
         do
         {
-            printf(prompt);
+            printf("%s", prompt);
             scanRet = scanf(format, eingabe);
             clearBuffer(); // Notwendig?
             if (scanRet == 1)
