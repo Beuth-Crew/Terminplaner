@@ -4,6 +4,7 @@
 #include "datastructure.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 // Globale Variablen (pfui)
 unsigned short AppointmentCount = 0;
@@ -11,7 +12,29 @@ TAppointment Calendar[MAX_APPOINTMENTS];
 
 void createAppointment()
 {
-    printf("createAppointment()\n\n");
+    char const Title = "Erfassung eines neuen Termins";
+    char const DatePrompt           = "Datum         :";
+    char const TimePrompt           = "Uhrzeit       :";
+    char const DescriptionPrompt    = "Beschreibung  :";
+    char const LocationPrompt       = "Ort           :";
+    char const DurationPrompt       = "Dauer         :";
+
+
+    printLine('=', strlen(Title));
+    printf("\n");
+
+
+    getDate(&DatePrompt, TDate **date);
+
+    getTime(&TimePrompt, TTime **time);
+
+    getText(&DescriptionPrompt, 50, char **str);
+
+    getText(&LocationPrompt, 50, char **str);
+
+    getTime(&DurationPrompt, TTime **duration);
+
+    printf("Termin wurde gespeichert!")
     waitForEnter();
 }
 

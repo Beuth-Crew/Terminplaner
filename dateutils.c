@@ -331,7 +331,7 @@ int getDate(char const *aufforderung, TDate **date)
 }
 
 
-/*int getzeit(char const *aufforderung, Tzeit **zeit)
+int getzeit(char const *aufforderung, Tzeit **zeit)
 {
     char eingabe[5];
     int anzEingelesen; // Anzahl richtig eingelesener Werte
@@ -389,7 +389,6 @@ int getDate(char const *aufforderung, TDate **date)
     return 0;
 }
 
-*/
 void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
 {
     switch (dayOfWeek)
