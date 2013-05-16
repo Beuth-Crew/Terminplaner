@@ -44,7 +44,7 @@ int isDateValid(TDate const *date);
  * CHANGES     :            -
  ******************************************************/
 
-int isTimeValid(TTime const *date)
+int isTimeValid(TTime const *date);
 /******************************************************
  * FUNCTION:                isTimeValid
  *-----------------------------------------------------
