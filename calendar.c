@@ -12,6 +12,7 @@ TAppointment Calendar[MAX_APPOINTMENTS];
 
 void createAppointment()
 {
+    *date = malloc(sizeof(TAppointment));
     char const Title = "Erfassung eines neuen Termins";
     char const DatePrompt           = "Datum         :";
     char const TimePrompt           = "Uhrzeit       :";

@@ -245,7 +245,7 @@ int getTimeFromString(char const *Time1, TTime *Time2)
 }
 
 
-int getDate(char const *aufforderung, TDate **date)
+int getDate(char const *prompt, TDate **date)
 {
     char eingabe[12];
     int anzEingelesen; // Anzahl richtig eingelesener Werte
@@ -253,7 +253,7 @@ int getDate(char const *aufforderung, TDate **date)
     unsigned short monatsziffer = 0; // Für die Berechnung des Wochentages
     TDate tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert wird.
     
-    printf("\n%s", aufforderung);
+    printf("\n%s", prompt);
     anzEingelesen = scanf("%11[^\n]", eingabe);
     clearBuffer();
     
@@ -332,13 +332,13 @@ int getDate(char const *aufforderung, TDate **date)
 }
 
 
-int getTime(char const *aufforderung, TTime **Time)
+int getTime(char const *prompt, TTime **Time)
 {
     char eingabe[5];
     int anzEingelesen; // Anzahl richtig eingelesener Werte
     
     
-    printf("\n%s", aufforderung);
+    printf("\n%s", prompt);
     anzEingelesen = scanf("%5[^\n]", eingabe);
     TTime tmpTime;
     clearBuffer();
