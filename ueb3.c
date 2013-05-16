@@ -34,8 +34,8 @@ int main()
             case 5: sortCalendar();                         break;
             case 6: listCalendar();                         break;
             case 7: printf("Das Programm wird beendet");    break;
-            case 8: getTime("Yo, test123");                 break;
-            case 9: getDate("Svens getDate")
+                //    case 8: getTime("Yo, test123");                 break;
+                //case 9: getDate("Svens getDate")
         }
 
     } while(selection != 7);

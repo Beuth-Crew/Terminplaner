@@ -13,24 +13,26 @@ TAppointment Calendar[MAX_APPOINTMENTS];
 void createAppointment()
 {
     TAppointment *tmpAppointment = NULL;
-    TAppointment*Item = malloc(sizeof(TAppointment));
+    //TAppointment*Item = malloc(sizeof(TAppointment));
     TDate tmpDate;
     TTime tmpTime;
     TTime tmpDuration;
-    
-    char const Title = "Erfassung eines neuen Termins";
-    char const DatePrompt           = "Datum         :";
-    char const TimePrompt           = "Uhrzeit       :";
-    char const DescriptionPrompt    = "Beschreibung  :";
-    char const LocationPrompt       = "Ort           :";
-    char const DurationPrompt       = "Dauer         :";
 
+    char const *Title = "Erfassung eines neuen Termins";
+    char const *DatePrompt           = "Datum         :";
+    char const *TimePrompt           = "Uhrzeit       :";
+    char const *DescriptionPrompt    = "Beschreibung  :";
+    char const *LocationPrompt       = "Ort           :";
+    char const *DurationPrompt       = "Dauer         :";
 
-    printLine('=', strlen(&Title)); //& war nicht da
+    printf(Title);
+    printf("\n");
+    printLine('=', strlen(Title)); //& war nicht da
     printf("\n");
 
 
-    getDate(&DatePrompt, tmpDate);
+    getDate(DatePrompt, tmpDate);
+    printf("1");
 
     getTime(&TimePrompt, tmpTime);
 
@@ -40,6 +42,7 @@ void createAppointment()
 
     getTime(&DurationPrompt, tmpDuration);
 
+    AppointmentCount++;
     printf("Termin wurde gespeichert!");
     waitForEnter();
 }
@@ -81,5 +84,4 @@ void freeAppointment(TAppointment *appointment)
     free(appointment->date);
     free(appointment->duration);
     free(appointment->location);
-    free(appointment);
 }
