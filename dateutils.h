@@ -44,6 +44,24 @@ int isDateValid(TDate const *date);
  * CHANGES     :            -
  ******************************************************/
 
+int iszeitValid(Tzeit const *date)
+/******************************************************
+ * FUNCTION:                iszeitValid
+ *-----------------------------------------------------
+ * DESCRIPTION:             Prueft, ob die uebergebene Zeit gueltig ist.
+ * FIELD OF APPLICATION:    Local
+ * PARAMETER:               -
+ * TYP OF RESULT:           int
+ * VALUE OF RESULT:
+ *   -> NORMAL CASE:        0 (Zeit unguelig)
+ *                          1 (Zeit gueltig)
+ *   -> FAULT CASE:         -
+ *-----------------------------------------------------
+ * DEVELOPED BY:            Seven Hallmann
+ *           AT:            2013-04-13
+ * CHANGES     :            -
+ ******************************************************/
+
 int getDateFromString(char const *datum, TDate *date);
 /******************************************************
  * FUNCTION:                getDateFromString
@@ -59,6 +77,24 @@ int getDateFromString(char const *datum, TDate *date);
  *-----------------------------------------------------
  * DEVELOPED BY:            Seven Hallmann
  *           AT:            2013-04-13
+ * CHANGES     :            -
+ ******************************************************/
+
+ int getzeitFromString(char const *zeit1, Tzeit *zeit2); //-- WORK IN PROGRESS --
+/******************************************************
+ * FUNCTION:                getzeitFromString
+ *-----------------------------------------------------
+ * DESCRIPTION:             Parst eine Uhrzeit aus einer Zeichenkette.
+ * FIELD OF APPLICATION:    Local
+ * PARAMETER:               char const *zeit1
+ *                          Tzeit *zeit2
+ * TYP OF RESULT:           int
+ * VALUE OF RESULT:
+ *   -> NORMAL CASE:        1 (Uhrzeit richtig geparst & Uhrzeit existiert)
+ *   -> FAULT  CASE:        0 (Uhrzeit konnte nicht geparst werden oder Uhrzeit existiert nicht)
+ *-----------------------------------------------------
+ * DEVELOPED BY:            Martin Ortel
+ *           AT:            2013-05-07
  * CHANGES     :            -
  ******************************************************/
 
@@ -97,6 +133,29 @@ int getDate(char const *prompt, TDate **date);
                         1 - bedeutet, dass kurze Bezeichnungen zurückgegeben werden,
                             also z.B. "Mo" anstatt "Montag"
 */
+
+
+ int getzeit(char const *prompt, Tzeit **zeit);  //-- WORK IN PROGRESS --
+/******************************************************
+ * FUNCTION:                getzeit
+ *-----------------------------------------------------
+ * DESCRIPTION:             Gibt die Uebergebene Zeichenkette auf dem
+ *                          Bildschirm aus und liest dann eine Uhrzeit
+ *                          vom Benutzer ein.
+ * FIELD OF APPLICATION:    Local
+ * PARAMETER:               char const *prompt
+ *                          zeit - enthält im falle einer korrekten
+ *                          Benutzereingabe das eingegebene Datum.
+ * TYP OF RESULT:           int
+ * VALUE OF RESULT:
+ *   -> NORMAL CASE:        1 (Datum richtig geparst & Datum existiert)
+ *   -> FAULT CASE:         0 (Datum konnte nicht geparst werden)
+ *-----------------------------------------------------
+ * DEVELOPED BY:            Martin Ortel
+ *           AT:            2013-05-07
+ * CHANGES     :            -
+ ******************************************************/
+
 void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
 
 #endif // DATEUTILS_H_INCLUDED

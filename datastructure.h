@@ -12,7 +12,8 @@ typedef struct
 {
     unsigned short minute;
     unsigned short hour;
-} TTime;
+//    zeitOfDay zeitOfDay;
+} Tzeit;
 
 typedef struct
 {
@@ -24,10 +25,10 @@ typedef struct
 
 typedef struct
 {
-    TTime *time;
+    Tzeit *zeit;
     TDate *date;
     char *description;
-    TTime *duration;
+    Tzeit *duration;
     char *location;
 } TAppointment;
 
