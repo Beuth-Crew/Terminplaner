@@ -34,7 +34,7 @@ void createAppointment()
 
     getTime(&DurationPrompt, TTime **duration);
 
-    printf("Termin wurde gespeichert!")
+    printf("Termin wurde gespeichert!");
     waitForEnter();
 }
 

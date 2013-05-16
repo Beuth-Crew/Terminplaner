@@ -18,12 +18,12 @@ int isLeapYear(int jahr)
 }
 
 /*
-int iszeitValid(Tzeit const *zeit)
+int isTimeValid(TTime const *Time)
 {
-    if (zeit->hour < 0 || zeit->hour > 24)
+    if (Time->hour < 0 || Time->hour > 24)
         return 0;
 
-    if (zeit->minute < 0 || zeit->minute > 59)
+    if (Time->minute < 0 || Time->minute > 59)
         return 0;
 
     return 1;
@@ -161,21 +161,21 @@ int getDateFromString(char const *datum, TDate *date)
 }
 
 
-int getzeitFromString(char const *zeit1, Tzeit *zeit2)
+int getTimeFromString(char const *Time1, TTime *Time2)
 {
 
-    char *cHour = NULL, *cMinute = NULL;                                                // Stunden, Minuten als Teilstring von Zeit
-    Tzeit tmpzeit;                                                                      // Damit das übergebene Datum im Fehlerfall nicht verändert werden muss.
+    char *cHour = NULL, *cMinute = NULL;                                                // Stunden, Minuten als Teilstring von Time
+    TTime tmpTime;                                                                      // Damit das übergebene Datum im Fehlerfall nicht verändert werden muss.
     unsigned short nOfColons = 0;                                                       // Es darf maximal ein Doppelpunkt vorkommen
-    char *loczeit;                                                                      // lokale Zeit in der Funktion ( = Zeit-Parameter)
+    char *locTime;                                                                      // lokale Time in der Funktion ( = Time-Parameter)
     char *p;                                                                            // Iterator
 
-    loczeit = calloc(strlen(zeit1) + 1, sizeof(char));
-    if (loczeit == NULL)
+    locTime = calloc(strlen(Time1) + 1, sizeof(char));
+    if (locTime == NULL)
         return 0;                                                                       // Speicher kann nicht reserviert werden.
 
-    p = loczeit;
-    strcpy(loczeit, zeit1);
+    p = locTime;
+    strcpy(locTime, Time1);
 
     while (*p != '\0')
     {
@@ -191,7 +191,7 @@ int getzeitFromString(char const *zeit1, Tzeit *zeit2)
             }
             else
             {
-                free(loczeit);
+                free(locTime);
                 return 0;
             }
             while ((*(p + 1) >= '0' && *(p + 1) <= '9') && *(p + 1) != '\0')            // Die Zahl bis zum Ende durchlaufen
@@ -207,7 +207,7 @@ int getzeitFromString(char const *zeit1, Tzeit *zeit2)
         }
         else
         {
-            free(loczeit);
+            free(locTime);
             return 0;                                                                   // Es ist ein ungueltiges Zeichen enthalten.
         }
 
@@ -223,23 +223,23 @@ int getzeitFromString(char const *zeit1, Tzeit *zeit2)
 
     // Die Typecast (int -> unsigned short) sollten immer funktionieren,
     // da für Stunden und Minuten eh nur kleine positive Zahlen zulässig sind.
-    tmpzeit.Hour   = atoi(cHour);     if (errno != 0) return 0;
-    tmpzeit.Minute = atoi(cMinute);   if (errno != 0) return 0;
+    tmpTime.Hour   = atoi(cHour);     if (errno != 0) return 0;
+    tmpTime.Minute = atoi(cMinute);   if (errno != 0) return 0;
 
     // Zur Sicherheit
-    assert(tmpzeit.Hour <= 24);
-    assert(tmpzeit.Minute <= 60);
+    assert(tmpTime.Hour <= 24);
+    assert(tmpTime.Minute <= 60);
 
- /*   if (iszeitValid(&tmpzeit) == 0)
+ /*   if (isTimeValid(&tmpTime) == 0)
     {
         return 0;
     }
 */
 
-    zeit2->Hour = tmpzeit.Hour;
-    zeit2->Minute = tmpzeit.Minute;
+    Time2->Hour = tmpTime.Hour;
+    Time2->Minute = tmpTime.Minute;
 
-    free(loczeit);
+    free(locTime);
     return 1;
 }
 
@@ -331,7 +331,7 @@ int getDate(char const *aufforderung, TDate **date)
 }
 
 
-int getzeit(char const *aufforderung, Tzeit **zeit)
+int getTime(char const *aufforderung, TTime **Time)
 {
     char eingabe[5];
     int anzEingelesen; // Anzahl richtig eingelesener Werte
@@ -343,13 +343,13 @@ int getzeit(char const *aufforderung, Tzeit **zeit)
 
     if (anzEingelesen == 1)
     {
-        if (getzeitFromString(eingabe, &tmpzeit) == 1)
+        if (getTimeFromString(eingabe, &tmpTime) == 1)
         {
-            *date = malloc(sizeof(Tzeit));
-            if (*zeit)
+            *date = malloc(sizeof(TTime));
+            if (*Time)
             {
-                (*zeit)->hour = tmpzeit.hour;
-                (*zeit)->minute = tmpzeit.minute;
+                (*Time)->hour = tmpTime.hour;
+                (*Time)->minute = tmpTime.minute;
 
                 // http://de.wikipedia.org/wiki/Wochentagsberechnung
                 switch ((*date)->hour)
@@ -426,7 +426,7 @@ void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
     }
 }
 
-/*int printzeit
+/*int printTime
 
 int printDate
 */

@@ -9,7 +9,7 @@
 int main()
 {
     int selection;
-    char const * const title = "Terminverwaltung V 0.01";
+    char const * const title = "Terminverwaltung V 0.03";
 
     unsigned short const numMenuPoints = 7;
     char const * menuPoints[numMenuPoints];
@@ -34,7 +34,7 @@ int main()
             case 5: sortCalendar();                         break;
             case 6: listCalendar();                         break;
             case 7: printf("Das Programm wird beendet");    break;
-            case 8: getzeit("Yo, test123");                 break;
+            case 8: getTime("Yo, test123");                 break;
             case 9: getDate("Svens getDate")
         }
 

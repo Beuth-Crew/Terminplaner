@@ -44,17 +44,17 @@ int isDateValid(TDate const *date);
  * CHANGES     :            -
  ******************************************************/
 
-int iszeitValid(Tzeit const *date)
+int isTimeValid(TTime const *date)
 /******************************************************
- * FUNCTION:                iszeitValid
+ * FUNCTION:                isTimeValid
  *-----------------------------------------------------
- * DESCRIPTION:             Prueft, ob die uebergebene Zeit gueltig ist.
+ * DESCRIPTION:             Prueft, ob die uebergebene Time gueltig ist.
  * FIELD OF APPLICATION:    Local
  * PARAMETER:               -
  * TYP OF RESULT:           int
  * VALUE OF RESULT:
- *   -> NORMAL CASE:        0 (Zeit unguelig)
- *                          1 (Zeit gueltig)
+ *   -> NORMAL CASE:        0 (Time unguelig)
+ *                          1 (Time gueltig)
  *   -> FAULT CASE:         -
  *-----------------------------------------------------
  * DEVELOPED BY:            Seven Hallmann
@@ -80,14 +80,14 @@ int getDateFromString(char const *datum, TDate *date);
  * CHANGES     :            -
  ******************************************************/
 
- int getzeitFromString(char const *zeit1, Tzeit *zeit2); //-- WORK IN PROGRESS --
+ int getTimeFromString(char const *Time1, TTime *Time2); //-- WORK IN PROGRESS --
 /******************************************************
- * FUNCTION:                getzeitFromString
+ * FUNCTION:                getTimeFromString
  *-----------------------------------------------------
  * DESCRIPTION:             Parst eine Uhrzeit aus einer Zeichenkette.
  * FIELD OF APPLICATION:    Local
- * PARAMETER:               char const *zeit1
- *                          Tzeit *zeit2
+ * PARAMETER:               char const *Time1
+ *                          TTime *Time2
  * TYP OF RESULT:           int
  * VALUE OF RESULT:
  *   -> NORMAL CASE:        1 (Uhrzeit richtig geparst & Uhrzeit existiert)
@@ -135,16 +135,16 @@ int getDate(char const *prompt, TDate **date);
 */
 
 
- int getzeit(char const *prompt, Tzeit **zeit);  //-- WORK IN PROGRESS --
+ int getTime(char const *prompt, TTime **Time);  //-- WORK IN PROGRESS --
 /******************************************************
- * FUNCTION:                getzeit
+ * FUNCTION:                getTime
  *-----------------------------------------------------
  * DESCRIPTION:             Gibt die Uebergebene Zeichenkette auf dem
  *                          Bildschirm aus und liest dann eine Uhrzeit
  *                          vom Benutzer ein.
  * FIELD OF APPLICATION:    Local
  * PARAMETER:               char const *prompt
- *                          zeit - enthält im falle einer korrekten
+ *                          Time - enthält im falle einer korrekten
  *                          Benutzereingabe das eingegebene Datum.
  * TYP OF RESULT:           int
  * VALUE OF RESULT:
