@@ -48,7 +48,7 @@ int isTimeValid(TTime const *date);
 /******************************************************
  * FUNCTION:                isTimeValid
  *-----------------------------------------------------
- * DESCRIPTION:             Prueft, ob die uebergebene Time gueltig ist.
+ * DESCRIPTION:             Prueft, ob die uebergebene Zeit gueltig ist.
  * FIELD OF APPLICATION:    Local
  * PARAMETER:               -
  * TYP OF RESULT:           int
@@ -57,7 +57,7 @@ int isTimeValid(TTime const *date);
  *                          1 (Time gueltig)
  *   -> FAULT CASE:         -
  *-----------------------------------------------------
- * DEVELOPED BY:            Seven Hallmann
+ * DEVELOPED BY:            Martin Ortel
  *           AT:            2013-04-13
  * CHANGES     :            -
  ******************************************************/
@@ -157,5 +157,7 @@ int getDate(char const *prompt, TDate **date);
  ******************************************************/
 
 void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
+
+void printDate();
 
 #endif // DATEUTILS_H_INCLUDED

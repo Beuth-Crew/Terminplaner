@@ -14,9 +14,9 @@ void createAppointment()
 {
     TAppointment *tmpAppointment = NULL;
     //TAppointment*Item = malloc(sizeof(TAppointment));
-    TDate tmpDate;
-    TTime tmpTime;
-    TTime tmpDuration;
+    //TDate* tmpDate;
+    //TTime* tmpTime;
+    //TTime tmpDuration;
 
     char const *Title = "Erfassung eines neuen Termins";
     char const *DatePrompt           = "Datum         :";
@@ -31,19 +31,26 @@ void createAppointment()
     printf("\n");
 
 
-    getDate(DatePrompt, tmpDate);
-    printf("1");
-
-    getTime(&TimePrompt, tmpTime);
+    getDate(DatePrompt, &tmpAppointment->date);
+//    tmpAppointment->date = tmpDate;
+    do
+    {
+        getTime(&TimePrompt, &tmpAppointment->time);
+    }while(isTimeValid(tmpAppointment->time));
+//    tmpAppointment->time = tmpTime;
 
     getText(&DescriptionPrompt, 50, &tmpAppointment->description);
 
     getText(&LocationPrompt, 50, &tmpAppointment->location);
 
-    getTime(&DurationPrompt, tmpDuration);
+    getTime(&DurationPrompt, tmpAppointment->duration);
 
+
+    Calendar[AppointmentCount] = *tmpAppointment;                             //Uebergabe des erstellten Termins an den Calendar-String
     AppointmentCount++;
+
     printf("Termin wurde gespeichert!");
+
     waitForEnter();
 }
 
@@ -73,7 +80,15 @@ void sortCalendar()
 
 void listCalendar()
 {
-    printf("listCalendar()\n\n");
+    char const * Headline = "Liste der Termine";
+    printLine('=', strlen(Headline));
+
+    for(AppointmentCount; AppointmentCount > 0; AppointmentCount--)
+    {
+        printf("------------------------------------------------------------------------------------");
+        printDate(lalala);
+        printf("------------------------------");
+    }
     waitForEnter();
 }
 
