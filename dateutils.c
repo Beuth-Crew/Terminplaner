@@ -429,11 +429,16 @@ void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
 
 void printTime()
 {
-
+    if(Calendar[AppointmentCount])
+    {
+        printf(Calendar[AppointmentCount]->time->hour);
+        printf(":");
+        printf(Calendar[AppointmentCount]->time->minute);
+    }
 }
 
 void printDate()
- {
+{
     if(Calendar[AppointmentCount])
     {
         printf(Calendar[AppointmentCount]->date->dayOfWeek);
@@ -445,5 +450,14 @@ void printDate()
         printf(Calendar[AppointmentCount]->date->year);
         printf(":\n");
     }
- }
+}
 
+void printAppointment()
+{
+    if(Calendar[AppointmentCount])
+    {
+        for(AppointmentCount; AppointmentCount > 0; AppointmentCount--)
+        {
+
+        }
+}

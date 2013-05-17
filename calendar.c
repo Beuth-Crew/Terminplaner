@@ -63,6 +63,9 @@ void editAppointment()
 void deleteAppointment()
 {
     printf("deleteAppointment()\n\n");
+
+	-- AppointmentCount;
+
     waitForEnter();
 }
 

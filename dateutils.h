@@ -160,4 +160,6 @@ void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
 
 void printDate();
 
+void printTime();
+
 #endif // DATEUTILS_H_INCLUDED
