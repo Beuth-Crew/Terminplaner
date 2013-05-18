@@ -156,10 +156,10 @@ int getDate(char const *prompt, TDate **date);
  * CHANGES     :            -
  ******************************************************/
 
-void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
+char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
 
-void printDate();
+void printDate(TDate *date);
 
-void printTime();
+void printTime(TTime *time);
 
 #endif // DATEUTILS_H_INCLUDED

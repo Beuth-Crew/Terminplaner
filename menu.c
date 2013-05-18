@@ -24,7 +24,7 @@ unsigned short Menu(char const *title, char const **menuPoints, unsigned short n
 
 
         for (i = 0; i < numMenuPoints; ++i)
-            printf("%2hu. %s\n", i + 1, menuPoints[i]);
+            printf("%2u. %s\n", i + 1, menuPoints[i]);
 
         printf("\nIhre Wahl: ");
         scanfRet = scanf("%hu", &input);

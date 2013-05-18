@@ -101,7 +101,6 @@ int getText(char const *prompt, unsigned short maxLen, char **str)
     if (eingabe)
     {
         sprintf(format, "%%%hu[^\n]", maxLen);
-        printf(format);
         do
         {
             printf(prompt);

@@ -2,6 +2,7 @@
 #include "calendar.h"
 #include "tools.h"
 #include "datastructure.h"
+#include "dateutils.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,11 +13,7 @@ TAppointment Calendar[MAX_APPOINTMENTS];
 
 void createAppointment()
 {
-    TAppointment *tmpAppointment = NULL;
-    //TAppointment*Item = malloc(sizeof(TAppointment));
-    //TDate* tmpDate;
-    //TTime* tmpTime;
-    //TTime tmpDuration;
+    TAppointment tmpAppointment;
 
     char const *Title = "Erfassung eines neuen Termins";
     char const *DatePrompt           = "Datum         :";
@@ -30,23 +27,24 @@ void createAppointment()
     printLine('=', strlen(Title)); //& war nicht da
     printf("\n");
 
-
-    getDate(DatePrompt, &tmpAppointment->date);
+// todo Schleife
+    if (getDate(DatePrompt, &tmpAppointment.date) == 0)
+        printf("Alter das Datum ist falsch! >:|");
 //    tmpAppointment->date = tmpDate;
     do
     {
-        getTime(&TimePrompt, &tmpAppointment->time);
-    }while(isTimeValid(tmpAppointment->time));
+        getTime(TimePrompt, &tmpAppointment.time);
+    }while(isTimeValid(tmpAppointment.time));
 //    tmpAppointment->time = tmpTime;
 
-    getText(&DescriptionPrompt, 50, &tmpAppointment->description);
+    getText(DescriptionPrompt, 50, &tmpAppointment.description);
 
-    getText(&LocationPrompt, 50, &tmpAppointment->location);
+    getText(LocationPrompt, 50, &tmpAppointment.location);
 
-    getTime(&DurationPrompt, tmpAppointment->duration);
+    getTime(DurationPrompt, &tmpAppointment.time);
 
 
-    Calendar[AppointmentCount] = *tmpAppointment;                             //Uebergabe des erstellten Termins an den Calendar-String
+    Calendar[AppointmentCount] = tmpAppointment;                             //Uebergabe des erstellten Termins an den Calendar-String
     AppointmentCount++;
 
     printf("Termin wurde gespeichert!");
@@ -83,13 +81,14 @@ void sortCalendar()
 
 void listCalendar()
 {
+    unsigned short i;
     char const * Headline = "Liste der Termine";
     printLine('=', strlen(Headline));
 
-    for(AppointmentCount; AppointmentCount > 0; AppointmentCount--)
+    for(i = 0; i < AppointmentCount; i++)
     {
         printf("------------------------------------------------------------------------------------");
-        printDate(lalala);
+        printDate(Calendar[i].date);
         printf("------------------------------");
     }
     waitForEnter();

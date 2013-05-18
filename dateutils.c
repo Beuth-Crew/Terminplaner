@@ -253,7 +253,6 @@ int getDate(char const *prompt, TDate **date)
 
     printf("\n%s", prompt);
     anzEingelesen = scanf("%11[^\n]", eingabe);
-    printf("%i", anzEingelesen);
     clearBuffer();
 
     if (anzEingelesen == 1)
@@ -390,7 +389,7 @@ int getTime(char const *prompt, TTime **Time)
     return 0;
 }
 
-void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
+char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
 {
     switch (dayOfWeek)
     {
@@ -425,39 +424,37 @@ void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
         default:
             assert(0); // Das darf nicht passieren!
     }
+
+    return str;
 }
 
-void printTime()
+void printTime(TTime *time)
 {
-    if(Calendar[AppointmentCount])
-    {
-        printf(Calendar[AppointmentCount]->time->hour);
-        printf(":");
-        printf(Calendar[AppointmentCount]->time->minute);
-    }
+    printf("%uh", time->hour);
+    printf(":");
+    printf("%uh", time->minute);
 }
 
-void printDate()
+void printDate(TDate *date)
 {
-    if(Calendar[AppointmentCount])
-    {
-        printf(Calendar[AppointmentCount]->date->dayOfWeek);
-        printf(", der ");
-        printf(Calendar[AppointmentCount]->date->day);
-        printf(".");
-        printf(Calendar[AppointmentCount]->date->month);
-        printf(".");
-        printf(Calendar[AppointmentCount]->date->year);
-        printf(":\n");
-    }
+    char weekStr[10];
+
+    printf("%s", weekDayToStr(weekStr, date->dayOfWeek, 1));
+    printf(", der ");
+    printf("%hu", date->day);
+    printf(".");
+    printf("%hu", date->month);
+    printf(".");
+    printf("%hu", date->year);
+    printf(":\n");
 }
 
 void printAppointment()
 {
-    if(Calendar[AppointmentCount])
+/*    if(Calendar[AppointmentCount])
     {
         for(AppointmentCount; AppointmentCount > 0; AppointmentCount--)
         {
 
-        }
+        }*/
 }
