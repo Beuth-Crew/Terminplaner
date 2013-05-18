@@ -10,7 +10,7 @@
 */
 static void printErrorMessage()
 {
-   printf("Ungueltige Eingabe");
+   printf("Ungueltige UserInput");
 }
 
 void clearScreen()
@@ -34,25 +34,25 @@ void clearBuffer()
 
 int askAgain()
 {
-   int anzGelesen;
-   char eingabe;
+   int ReadSuccessfully;
+   char UserInput;
 
    do
    {
       printf("Moechten Sie noch einmal (j/n)? ");
 
-      // Benutzereingabe einlesen
-      anzGelesen = scanf("%c", &eingabe); // Ein Zeichen einlesen
-      if (eingabe != '\n')
+      // BenutzerUserInput einlesen
+      ReadSuccessfully = scanf("%c", &UserInput); // Ein Zeichen einlesen
+      if (UserInput != '\n')
          clearBuffer();
 
-      // Eingabe überprüfen
-      if (anzGelesen != 1)
+      // UserInput überprüfen
+      if (ReadSuccessfully != 1)
          printErrorMessage(); // Fehlermeldung hinter dem Eingabecursor ausgeben
       else
       {
          // Gültige Antworten auf die Frage sind 'j', 'J', 'n' und 'N'.
-         switch (eingabe)
+         switch (UserInput)
          {
             case 'j':
             case 'J':
@@ -76,7 +76,7 @@ void waitForEnter()
 {
     char x[2]; // 1 Zeichen + '\0'
 
-    printf("Bitte Eingabetaste druecken ...");
+    printf("Bitte UserInputtaste druecken ...");
     scanf("%1[^\n]", x);
     clearBuffer();
 }
@@ -96,28 +96,28 @@ int getText(char const *prompt, unsigned short maxLen, char **str)
     char format[20]; // Inhalt sieht nachher beispielsweise so aus (bei maxLen = 15): "%15[^\n]"
     int scanRet;
     int len; // Länge der vom Benutzer eingegebenen Zeichenkette
-    char *eingabe = calloc(maxLen + 1, sizeof(char));
+    char *UserInput = calloc(maxLen + 1, sizeof(char));
 
-    if (eingabe)
+    if (UserInput)
     {
         sprintf(format, "%%%hu[^\n]", maxLen);
         do
         {
             printf(prompt);
-            scanRet = scanf(format, eingabe);
+            scanRet = scanf(format, UserInput);
             clearBuffer(); // Notwendig?
             if (scanRet == 1)
             {
-                len = strlen(eingabe);
+                len = strlen(UserInput);
                 if (len > 0)
                 {
                     // Für den String wird genau so viel Speicher reserviert, wie nötig ist.
                     *str = calloc(len + 1, sizeof(char));
                     if (*str)
-                        strcpy(*str, eingabe); // Benutzereingabe in das "zurückzugebende" Argumgent kopieren
+                        strcpy(*str, UserInput); // Benutzereingabe in das "zurückzugebende" Argumgent kopieren
                     else
                     {
-                        free(eingabe);
+                        free(UserInput);
                         return 0; // Es konnte kein Speicher reserviert werden
                     }
                 }
@@ -129,6 +129,50 @@ int getText(char const *prompt, unsigned short maxLen, char **str)
     else
         return 0; // Speicher konnte nicht reserviert werden
 
-    free(eingabe);
+    free(UserInput);
     return 1; // Alles ok
+}
+
+int askPolarQuestion(char * Prompt)
+{
+    int ReadSuccessfully;
+    char UserInput;
+
+    do
+    {
+        printf(Prompt);
+
+// Benutzereingabe einlesen
+
+    ReadSuccessfully = scanf("%c", &UserInput); // Ein Zeichen einlesen
+    if (UserInput != '\n')
+    {
+        clearBuffer();
+    }
+
+// UserInput überprüfen
+    if (ReadSuccessfully != 1)
+    {
+        printErrorMessage(); // Fehlermeldung hinter dem Eingabecursor ausgeben
+    }else
+    {
+// Gültige Antworten auf die Frage sind 'j', 'J', 'n' und 'N'.
+        switch (UserInput)
+        {
+            case 'j':
+            case 'J':
+               return 1;
+
+            case 'n':
+            case 'N':
+               return 0;
+
+            default:
+               printErrorMessage(); // Fehlermeldung hinter dem UserInputcursor ausgeben
+         }
+      }
+    }while (1);
+
+   // Wird nie erreicht:
+   return 0; // Nur um den Compiler zu beruhigen
 }

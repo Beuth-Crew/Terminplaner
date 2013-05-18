@@ -3,6 +3,7 @@
 #include "tools.h"
 #include "datastructure.h"
 #include "dateutils.h"
+#include "tools.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -13,7 +14,7 @@ TAppointment Calendar[MAX_APPOINTMENTS];
 
 void createAppointment()
 {
-    TAppointment tmpAppointment;
+    TAppointment TmpAppointment;
 
     char const *Title = "Erfassung eines neuen Termins";
     char const *DatePrompt           = "Datum         :";
@@ -22,29 +23,67 @@ void createAppointment()
     char const *LocationPrompt       = "Ort           :";
     char const *DurationPrompt       = "Dauer         :";
 
+    int j = 0;
+
+// Ausgabe der Ueberschrift
+
     printf(Title);
     printf("\n");
-    printLine('=', strlen(Title)); //& war nicht da
+    printLine('=', strlen(Title));
     printf("\n");
 
-// todo Schleife
-    if (getDate(DatePrompt, &tmpAppointment.date) == 0)
-        printf("Alter das Datum ist falsch! >:|");
-//    tmpAppointment->date = tmpDate;
-    do
+// Einlesen des Datums
+
+    while(getDate(DatePrompt, &TmpAppointment.date) == 0)
     {
-        getTime(TimePrompt, &tmpAppointment.time);
-    }while(isTimeValid(tmpAppointment.time));
-//    tmpAppointment->time = tmpTime;
-
-    getText(DescriptionPrompt, 50, &tmpAppointment.description);
-
-    getText(LocationPrompt, 50, &tmpAppointment.location);
-
-    getTime(DurationPrompt, &tmpAppointment.time);
+        printf("Das Datum konnte nicht interpretiert werden.\nBitte versuchen Sie es noch einmal.\n");
+    }
 
 
-    Calendar[AppointmentCount] = tmpAppointment;                             //Uebergabe des erstellten Termins an den Calendar-String
+// Einlesen der Zeit
+
+    while(getTime(TimePrompt, &TmpAppointment.time) == 0)
+    {
+        printf("Die Uhrzeit konnte nicht interpretiert werden.\nBitte versuchen Sie es noch einmal.\n");
+    }
+
+
+// Einlesen der Beschreibung
+
+    while(j != 1)
+    {
+        switch(getText(DescriptionPrompt, 100, &TmpAppointment.description))
+        {
+            case 1: j = 1;                                                                                                                                          break;
+            case 2: j = askPolarQuestion("Sie haben keine Beschreibung eingegeben.\nMöchten Sie dieses Feld frei lassen(Ja) oder die Eingabe wiederholen(Nein)?");   break;
+            case 3: j = 0;  printf("Ihre Eingabe ist zu lang.\nBitte beschraenken Sie sich auf 100 Zeichen.");                                                       break;
+        }
+    }
+
+    j = 0;
+
+// Einlesen des Orts
+
+    while(j != 1)
+    {
+        switch(getText(LocationPrompt, 15, &TmpAppointment.location))
+        {
+            case 1: j = 1;                                                                                                                                          break;
+            case 2: j = askPolarQuestion("Sie haben keineb Ort eingegeben.\nMöchten Sie dieses Feld frei lassen(Ja) oder die Eingabe wiederholen(Nein)?");           break;
+            case 3: j = 0;  printf("Ihre Eingabe ist zu lang.\nBitte beschraenken Sie sich auf 15 Zeichen.");                                                        break;
+        }
+    }
+
+// Einlesen der Dauer
+
+    while(getTime(DurationPrompt, &TmpAppointment.time) == 0)
+    {
+        printf("Die Dauer konnte nicht interpretiert werden.\nBitte versuchen Sie es noch einmal.\n");
+    }
+
+//Uebergabe des erstellten Termins an den Calendar-String
+
+    Calendar[AppointmentCount] = TmpAppointment;
     AppointmentCount++;
 
     printf("Termin wurde gespeichert!");

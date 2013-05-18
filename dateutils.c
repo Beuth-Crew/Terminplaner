@@ -159,105 +159,52 @@ int getDateFromString(char const *datum, TDate *date)
 }
 
 
-int getTimeFromString(char const *Time1, TTime *Time2)
+int getTimeFromString(char const *UserInput, TTime *time)
 {
+    char* LocalTime;
+    char LocalHours[3];
+    char LocalMinutes[3];
 
-    char *cHour = NULL, *cMinute = NULL;                                                // Stunden, Minuten als Teilstring von Time
-    TTime tmpTime;                                                                      // Damit das übergebene Datum im Fehlerfall nicht verändert werden muss.
-    unsigned short nOfColons = 1;                                                       // Es darf maximal ein Doppelpunkt vorkommen
-    char *locTime;                                                                      // lokale Time in der Funktion ( = Time-Parameter)
-    char *p;                                                                            // Iterator
+    LocalTime = calloc(strlen(UserInput) + 1, sizeof(char));
+    if (LocalTime == NULL)
+        return 0; // Speicher kann nicht reserviert werden.
 
-    locTime = calloc(strlen(Time1) + 1, sizeof(char));
-    if (locTime == NULL)
-        return 0;                                                                       // Speicher kann nicht reserviert werden.
+    strcpy(LocalTime, UserInput);
 
-    p = locTime;
-    strcpy(locTime, Time1);
+    LocalHours[0] = LocalTime[0];
+    LocalHours[1] = LocalTime[1];
+    LocalHours[2] = '\n';
+    LocalMinutes[0] = LocalTime[3];
+    LocalMinutes[1] = LocalTime[4];
+    LocalMinutes[2] = '\n';
 
-    while (*p != '\0')
-    {
-        if (*p >= '0' && *p <= '9')
-        {
-            if (cHour == NULL)
-            {
-                cHour = p;                                                              // Der Tag ist noch nicht gesetzt. Er kommt als erstes.
-            }
-            else if (cMinute == NULL)
-            {
-                cMinute = p;                                                            // Der Monat ist noch nicht gesetzt. Er kommt als zweites.
-            }
-            else
-            {
-                free(locTime);
-                return 0;
-            }
-            while ((*(p + 1) >= '0' && *(p + 1) <= '9') && *(p + 1) != '\0')            // Die Zahl bis zum Ende durchlaufen
-            {
-                ++p;
-            }
-        }
+    time->hour = atoi(LocalHours);
+    time->minute = atoi(LocalMinutes);
 
-        else if (*p == '.')
-        {
-            ++nOfColons;
-            *p = '\0';                                                                  // Punkte werden durch \0 ersetzt.
-        }
-        else
-        {
-            free(locTime);
-            return 0;                                                                   // Es ist ein ungueltiges Zeichen enthalten.
-        }
+    if(time->hour < 0 || time->minute < 0)
+        return 0;
 
-        ++p;
-    }
+    free(LocalTime);
 
-    if (cHour == NULL || cMinute == NULL)
-        return 0;                                                                       // Stunden und Mintuen müssen in der Uhrzeit enthalten sein.
-
-    if (nOfColons != 1)
-        return 0;                                                                       // Es muss genau ein Doppelpunkt vorkommen
-
-
-    // Die Typecast (int -> unsigned short) sollten immer funktionieren,
-    // da für Stunden und Minuten eh nur kleine positive Zahlen zulässig sind.
-    tmpTime.hour   = atoi(cHour);     if (errno != 0) return 0;
-    tmpTime.minute = atoi(cMinute);   if (errno != 0) return 0;
-
-    // Zur Sicherheit
-    assert(tmpTime.hour <= 24);
-    assert(tmpTime.minute <= 60);
-
-    /*   if (isTimeValid(&tmpTime) == 0)
-     {
-     return 0;
-     }
-     */
-
-    Time2->hour = tmpTime.hour;
-    Time2->minute = tmpTime.minute;
-
-    free(locTime);
     return 1;
-
 }
 
 
-int getDate(char const *prompt, TDate **date)
+int getDate(char const *Prompt, TDate **date)
 {
-    char eingabe[12];
-    int anzEingelesen; // Anzahl richtig eingelesener Werte
+    char UserInput[12];
+    int ReadSuccessfully; // Anzahl richtig eingelesener Werte
     short korrektur; // Schaltjahreskorrektur, für die Berechnung des Wochentages
     unsigned short monatsziffer = 0; // Für die Berechnung des Wochentages
     TDate tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert wird.
 
-    printf("\n%s", prompt);
-    anzEingelesen = scanf("%11[^\n]", eingabe);
+    printf("\n%s", Prompt);
+    ReadSuccessfully = scanf("%11[^\n]", UserInput);
     clearBuffer();
 
-    if (anzEingelesen == 1)
+    if (ReadSuccessfully == 1)
     {
-        if (getDateFromString(eingabe, &tmpDate) == 1)
+        if (getDateFromString(UserInput, &tmpDate) == 1)
         {
             *date = malloc(sizeof(TDate));
             if (*date)
@@ -330,63 +277,41 @@ int getDate(char const *prompt, TDate **date)
 }
 
 
-int getTime(char const *prompt, TTime **Time)
+int getTime(char const *Prompt, TTime **Time)
 {
-    char eingabe[5];
-    int anzEingelesen; // Anzahl richtig eingelesener Werte
-
-
-    printf("\n%s", prompt);
-    anzEingelesen = scanf("%5[^\n]", eingabe);
+    char UserInput[7];
+    int ReadSuccessfully;
     TTime tmpTime;
+
+// Usereingabe
+
+    printf("\n");
+    printf(Prompt);
+    ReadSuccessfully = scanf("%6[^\n]", UserInput);
     clearBuffer();
 
-    if (anzEingelesen == 1)
+// Parsen der Usereingabe in eine gueltige(!) Zeit
+
+    if (ReadSuccessfully)
     {
-        if (getTimeFromString(eingabe, &tmpTime) == 1)
+        if (getTimeFromString(UserInput, &tmpTime) == 1)
         {
             *Time = malloc(sizeof(TTime));
             if (*Time)
             {
                 (*Time)->hour = tmpTime.hour;
                 (*Time)->minute = tmpTime.minute;
-
-                switch ((*Time)->hour)
-                {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                    case 5:
-                    case 6:
-                    case 7:
-                    case 8:
-                    case 9:
-                    case 10:
-                    case 11:
-                    case 12:
-                    case 13:
-                    case 14:
-                    case 15:
-                    case 16:
-                    case 17:
-                    case 18:
-                    case 19:
-                    case 20:
-                    case 21:
-                    case 22:
-                    case 23:
-                    case 24:    break;
-
-                    default:
-                        assert(0); // Andere Werte dürfen hier nicht auftreten!
-                }
+            }else
+            {
+                return 0;           //Speicherplatz konnte nicht reserviert werden!
             }
         }
     }
 
-    return 0;
+    if((*Time)->hour < 0 || (*Time)->minute < 0)
+        return 0;
+
+    return 1;
 }
 
 char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)

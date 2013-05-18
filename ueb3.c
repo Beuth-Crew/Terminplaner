@@ -8,24 +8,24 @@
 
 int main()
 {
-    int selection;
-    char const * const title = "Terminverwaltung V 0.03";
+    int MenuSelection;
+    char const * const MenuTitle = "Terminverwaltung V 0.03";
 
-    unsigned short const numMenuPoints = 7;
-    char const * menuPoints[numMenuPoints];
-    menuPoints[0] = "Neuen Termin anlegen";
-    menuPoints[1] = "Termin bearbeiten";
-    menuPoints[2] = "Termin loeschen";
-    menuPoints[3] = "Termin suchen";
-    menuPoints[4] = "Termine sortieren";
-    menuPoints[5] = "Termine auflisten";
-    menuPoints[6] = "Programm beenden";
+    unsigned short const nOfMenuPoints = 7;
+    char const * MenuOptions[nOfMenuPoints];
+    MenuOptions[0] = "Neuen Termin anlegen";
+    MenuOptions[1] = "Termin bearbeiten";
+    MenuOptions[2] = "Termin loeschen";
+    MenuOptions[3] = "Termin suchen";
+    MenuOptions[4] = "Termine sortieren";
+    MenuOptions[5] = "Termine auflisten";
+    MenuOptions[6] = "Programm beenden";
 
     do
     {
-        selection = Menu(title, menuPoints, numMenuPoints);
+        MenuSelection = Menu(MenuTitle, MenuOptions, nOfMenuPoints);
 
-        switch(selection)
+        switch(MenuSelection)
         {
             case 1: createAppointment();                    break;
             case 2: editAppointment();                      break;
@@ -34,11 +34,9 @@ int main()
             case 5: sortCalendar();                         break;
             case 6: listCalendar();                         break;
             case 7: printf("Das Programm wird beendet");    break;
-                //    case 8: getTime("Yo, test123");                 break;
-                //case 9: getDate("Svens getDate")
         }
 
-    } while(selection != 7);
+    } while(MenuSelection != 7);
 
     return 0;
 }
