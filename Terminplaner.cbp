@@ -51,9 +51,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="tools.h" />
-		<Unit filename="ueb2.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="ueb3.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -364,7 +364,7 @@ void printDate(TDate *date)
 {
     char weekStr[10];
 
-    printf("%s", weekDayToStr(weekStr, date->dayOfWeek, 1));
+    printf("%s", weekDayToStr(weekStr, date->dayOfWeek, 0));
     printf(", der ");
     printf("%hu", date->day);
     printf(".");
@@ -374,12 +374,20 @@ void printDate(TDate *date)
     printf(":\n");
 }
 
-void printAppointment()
+void printAppointment(TAppointment* Appointment, int DoPrintDate)
 {
-/*    if(Calendar[AppointmentCount])
+// Ausgabe des Datum wenn DoPrintDate != 0
+    if(DoPrintDate)
     {
-        for(AppointmentCount; AppointmentCount > 0; AppointmentCount--)
-        {
+        printf("------------------------------------------------------------------------------------");
+        printDate(Appointment->date);
+        printf("------------------------------");
+    }
 
-        }*/
+
+}
+
+int compareIntegers(int Integer1, int Integer2)
+{
+    return Integer1-Integer2;
 }

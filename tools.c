@@ -76,7 +76,7 @@ void waitForEnter()
 {
     char x[2]; // 1 Zeichen + '\0'
 
-    printf("Bitte UserInputtaste druecken ...");
+    printf("\nBitte Eingabetaste(Enter) druecken ...");
     scanf("%1[^\n]", x);
     clearBuffer();
 }

@@ -122,14 +122,55 @@ void listCalendar()
 {
     unsigned short i;
     char const * Headline = "Liste der Termine";
-    printLine('=', strlen(Headline));
+    int DoPrintDate;
+
+// Ausgabe der Ueberschrift
+    if(AppointmentCount)
+    {
+        printf(Headline);
+        printf("\n");
+        printLine('=', strlen(Headline));
+    }else
+    {
+        printf("Es wurden noch keine Termine angelegt.");
+    }
+
+// Ueberpruefung ob der letzde Termin am gleichen Tag ist wie der aktuelle Termin
+// und setzt die Uebergabevariable fuer printAppointment: 0 ^= Datum nicht ausgeben
 
     for(i = 0; i < AppointmentCount; i++)
     {
-        printf("------------------------------------------------------------------------------------");
-        printDate(Calendar[i].date);
-        printf("------------------------------");
+        if(i)
+        {
+            if(compareIntegers(Calendar[i-1].date->day, Calendar[i].date->day) == 0)
+            {
+                if(compareIntegers(Calendar[i-1].date->month, Calendar[i].date->month) == 0)
+                {
+                    if(compareIntegers(Calendar[i-1].date->year, Calendar[i].date->year) == 0)
+                    {
+                        DoPrintDate = 0;
+                    }else
+                    {
+                        DoPrintDate = 1;
+                    }
+                }else
+                {
+                    DoPrintDate = 1;
+                }
+            }else
+            {
+                DoPrintDate = 1;
+            }
+        }else
+        {
+            DoPrintDate = 1;
+        }
+
+
+        printAppointment(Calendar[i], DoPrintDate);
+
     }
+
     waitForEnter();
 }
 

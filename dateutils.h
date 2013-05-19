@@ -162,4 +162,8 @@ void printDate(TDate *date);
 
 void printTime(TTime *time);
 
+void printAppointment();
+
+int compareIntegers(int Integer1, int Integer2);
+
 #endif // DATEUTILS_H_INCLUDED
