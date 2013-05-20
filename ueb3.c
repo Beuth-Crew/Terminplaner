@@ -33,7 +33,7 @@ int main()
             case 4: searchAppointment();                    break;
             case 5: sortCalendar();                         break;
             case 6: listCalendar();                         break;
-            case 7: printf("Das Programm wird beendet");    break;
+            case 7: quitCalendar();                         break;
         }
 
     } while(MenuSelection != 7);

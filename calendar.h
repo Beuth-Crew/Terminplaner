@@ -110,4 +110,6 @@ void sortCalendar();
  */
 void freeAppointment(TAppointment *appointment);
 
+void quitCalendar();
+
 #endif // CALENDAR_H_INCLUDED

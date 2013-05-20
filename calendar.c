@@ -4,6 +4,7 @@
 #include "datastructure.h"
 #include "dateutils.h"
 #include "tools.h"
+#include "files.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -181,4 +182,10 @@ void freeAppointment(TAppointment *appointment)
     free(appointment->date);
     free(appointment->duration);
     free(appointment->location);
+}
+
+void quitCalendar()
+{
+    saveCalendar(Calendar, AppointmentCount);
+    printf("Das Programm wird beendet");
 }
