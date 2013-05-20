@@ -81,7 +81,6 @@ int isDateValid(TDate const *date)
     return 1;
 }
 
-
 int getDateFromString(char const *datum, TDate *date)
 {
     char *cTag = NULL, *cMonat = NULL, *cJahr = NULL; // Tag, Monat, Jahr als Teilstring von datum
@@ -158,7 +157,6 @@ int getDateFromString(char const *datum, TDate *date)
     return 1;
 }
 
-
 int getTimeFromString(char const *UserInput, TTime *time)
 {
     char* LocalTime;
@@ -188,7 +186,6 @@ int getTimeFromString(char const *UserInput, TTime *time)
 
     return 1;
 }
-
 
 int getDate(char const *Prompt, TDate **date)
 {
@@ -275,7 +272,6 @@ int getDate(char const *Prompt, TDate **date)
 
     return 0;
 }
-
 
 int getTime(char const *Prompt, TTime **Time)
 {

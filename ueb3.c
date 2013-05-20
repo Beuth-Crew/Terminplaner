@@ -9,7 +9,7 @@
 int main()
 {
     int MenuSelection;
-    char const * const MenuTitle = "Terminverwaltung V 0.03";
+    char const * const MenuTitle = "Terminverwaltung V 0.04";
 
     unsigned short const nOfMenuPoints = 7;
     char const * MenuOptions[nOfMenuPoints];
@@ -20,6 +20,10 @@ int main()
     MenuOptions[4] = "Termine sortieren";
     MenuOptions[5] = "Termine auflisten";
     MenuOptions[6] = "Programm beenden";
+
+// Einlesen des Calendar-Files
+
+    readFilesAtStartup();
 
     do
     {

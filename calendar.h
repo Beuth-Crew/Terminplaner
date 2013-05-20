@@ -3,6 +3,8 @@
 
 #include "datastructure.h"
 
+int readFilesAtStartup();
+
 void createAppointment();
 /******************************************************
  * FUNCTION:                createAppointment

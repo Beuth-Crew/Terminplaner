@@ -13,6 +13,17 @@
 unsigned short AppointmentCount = 0;
 TAppointment Calendar[MAX_APPOINTMENTS];
 
+int readFilesAtStartup()
+{
+    if(loadCalendar(Calendar, &AppointmentCount) == 0)
+    {
+        return 0;
+    }else
+    {
+        return 1;
+    }
+}
+
 void createAppointment()
 {
     TAppointment TmpAppointment;
