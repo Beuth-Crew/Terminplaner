@@ -93,14 +93,14 @@ int saveCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 
         fclose(CalendarFileStream);
 
-        return 0;
+        return 1;
 
     }else
     {
         printf("Calender-File konnte nicht erzeugt/geoeffnet werden!");
 
         fclose(CalendarFileStream);
-        return 1;
+        return 0;
     }
 }
 
