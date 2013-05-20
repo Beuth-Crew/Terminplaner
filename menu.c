@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <string.h>
 
-unsigned short Menu(char const *title, char const **menuPoints, unsigned short numMenuPoints)
+unsigned short menu(char const *title, char const **menuPoints, unsigned short numMenuPoints)
 {
     unsigned short i; // Zählvariable
     unsigned short input; // Benutzereingabe

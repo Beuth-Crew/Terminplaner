@@ -23,7 +23,7 @@ int main()
 
     do
     {
-        MenuSelection = Menu(MenuTitle, MenuOptions, nOfMenuPoints);
+        MenuSelection = menu(MenuTitle, MenuOptions, nOfMenuPoints);
 
         switch(MenuSelection)
         {

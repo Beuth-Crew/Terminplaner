@@ -4,6 +4,7 @@
 #include "tools.h"
 #include <stdlib.h>
 #include <string.h>
+#include "datastructure.h"
 
 /*
     Statische Funktion, die einen Fehlertext in der Konsole ausgibt.
@@ -176,3 +177,4 @@ int askPolarQuestion(char * Prompt)
    // Wird nie erreicht:
    return 0; // Nur um den Compiler zu beruhigen
 }
+
