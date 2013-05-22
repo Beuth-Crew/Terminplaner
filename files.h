@@ -3,7 +3,7 @@
 #include "datastructure.h"
 #include <stdio.h>
 
-int loadCalendar(TAppointment * Calendar, unsigned short AppointmentCount);
+int loadCalendar(TAppointment * Calendar, unsigned short * AppointmentCount);
 /******************************************************
  * FUNCTION:                loadCalendar
  *-----------------------------------------------------
@@ -46,7 +46,7 @@ int saveCalendar(TAppointment * Calendar, unsigned short AppointmentCount);
  ******************************************************/
 
 
-int checkForCharacteristic(FILE *CalendarFileStream, unsigned int DataPointer, char* Characteristic);
+int checkForCharacteristic(char* CurrentLineAsString, char* Characteristic);
 /******************************************************
  * FUNCTION:                checkForCharacteristic
  *-----------------------------------------------------
@@ -66,7 +66,7 @@ int checkForCharacteristic(FILE *CalendarFileStream, unsigned int DataPointer, c
  ******************************************************/
 
 
-int numberOFLinesInFile(FILE *CalendarFileStream);
+//int numberOFLinesInFile(FILE *CalendarFileStream);
 /******************************************************
  * FUNCTION:                numberOFLinesInFile
  *-----------------------------------------------------
@@ -85,7 +85,7 @@ int numberOFLinesInFile(FILE *CalendarFileStream);
  ******************************************************/
 
 
-int copyLinesInStrings(char ** DataAsString, FILE * CalendarFileStream);
+int copyLineInString(char * LineAsString, FILE * CalendarFileStream);
 /******************************************************
  * FUNCTION:                copyLinesInStrings
  *-----------------------------------------------------
@@ -103,5 +103,8 @@ int copyLinesInStrings(char ** DataAsString, FILE * CalendarFileStream);
  *           AT:            2013-05-20
  * CHANGES     :            -
  ******************************************************/
+
+
+int loadAppointment(FILE * CalendarFileStream, TAppointment* Calendar, unsigned short AppointmentCount, char * CurrentLineAsString);
 
 #endif
