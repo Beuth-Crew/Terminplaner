@@ -156,9 +156,11 @@ int getDate(char const *prompt, TDate **date);
  * CHANGES     :            -
  ******************************************************/
 
+int getDayOfWeek(TDate * date);
+
 char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
 
-void printDate(TDate *date);
+void printDate(TDate date);
 
 void printTime(TTime *time);
 

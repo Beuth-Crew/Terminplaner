@@ -49,7 +49,7 @@ void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCoun
 
 // Einlesen des Datums
 
-    while(getDate(DatePrompt, &TmpAppointment.date) == 0)
+    while(getDate(DatePrompt, &TmpAppointment.date) != 0)
     {
         printf("Das Datum konnte nicht interpretiert werden.\nBitte versuchen Sie es noch einmal.\n");
     }
@@ -91,20 +91,23 @@ void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCoun
 
 // Einlesen der Dauer
 
-    while(getTime(DurationPrompt, &TmpAppointment.time) == 0)
+    while(getTime(DurationPrompt, &TmpAppointment.duration) == 0)
     {
         printf("Die Dauer konnte nicht interpretiert werden.\nBitte versuchen Sie es noch einmal.\n");
     }
 
 //Uebergabe des erstellten Termins an den Calendar-String
 
-//    Calendar[AppointmentCount] = TmpAppointment;
-    AppointmentCount++;
+    Calendar[*AppointmentCount] = TmpAppointment;
+    
+    *(AppointmentCount) = *(AppointmentCount) + 1;
 
     printf("Termin wurde gespeichert!");
 
     waitForEnter();
 }
+
+
 
 void editAppointment(TAppointment * Calendar, unsigned short * AppointmentCount)
 {
@@ -147,6 +150,7 @@ void listCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
         printf("%s", Headline);
         printf("\n");
         printLine('=', strlen(Headline));
+        printf("\n");
     }else
     {
         printf("Es wurden noch keine Termine angelegt.");
@@ -183,13 +187,15 @@ void listCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
             DoPrintDate = 1;
         }
 
+        if(DoPrintDate) printf("------------------------------------------------------------------------------------\n");
 
         printAppointment(Calendar[i], DoPrintDate);
-        printf("------------------------------------------------------------------------------------\n");
 
 
     }
 
+    printf("------------------------------------------------------------------------------------\n");
+    
     waitForEnter();
 }
 
@@ -205,6 +211,6 @@ void freeAppointment(TAppointment *appointment)
 
 void quitCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 {
-//    saveCalendar(Calendar, AppointmentCount);
+    saveCalendar(Calendar, AppointmentCount);
     printf("Das Programm wird beendet");
 }

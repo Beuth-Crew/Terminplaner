@@ -132,9 +132,10 @@ int getDateFromString(char const *datum, TDate *date)
     }
 
     if (cTag == NULL || cMonat == NULL || cJahr == NULL)
+    {
         free(p);
         return 0; // Tag, Monat und Jahr müssen im Datum enthalten sein.
-
+    }
     if (anzPunkte != 2)
         return 0; // Es müssen genau zwei Punkte vorkommen
 
@@ -154,7 +155,8 @@ int getDateFromString(char const *datum, TDate *date)
     date->day = tmpDate.day;
     date->month = tmpDate.month;
     date->year = tmpDate.year;
-
+    date->dayOfWeek = getDayOfWeek(date);
+    
     free(locDate);
     return 1;
 }
@@ -181,7 +183,7 @@ int getTimeFromString(char const *UserInput, TTime *time)
     
     free(LocalTime);
     
-    time = malloc(sizeof(TTime));
+ //   time = malloc(sizeof(TTime));
     if (time)
     {
         tmpTime.hour = atoi(LocalHours);
@@ -196,7 +198,6 @@ int getTimeFromString(char const *UserInput, TTime *time)
         time->hour = tmpTime.hour;
         time->minute = tmpTime.minute;
         
-        free(time);
         return 1;
     }
 
@@ -209,78 +210,34 @@ int getDate(char const *Prompt, TDate **date)
 {
     char UserInput[12];
     int ReadSuccessfully; // Anzahl richtig eingelesener Werte
-    short korrektur; // Schaltjahreskorrektur, für die Berechnung des Wochentages
-    unsigned short monatsziffer = 0; // Für die Berechnung des Wochentages
-    TDate tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert wird.
+    TDate * tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert wird.
 
-    printf("\n%s", Prompt);
+    printf("%s", Prompt);
     ReadSuccessfully = scanf("%11[^\n]", UserInput);
     clearBuffer();
 
     if (ReadSuccessfully == 1)
     {
-        if (getDateFromString(UserInput, &tmpDate) == 1)
+        tmpDate = malloc(sizeof(TDate));
+        
+        if (getDateFromString(UserInput, tmpDate) == 1)
         {
             *date = malloc(sizeof(TDate));
             if (*date)
             {
-                (*date)->day = tmpDate.day;
-                (*date)->month = tmpDate.month;
-                (*date)->year = tmpDate.year;
+                (*date)->day        = (*tmpDate).day;
+                (*date)->month      = (*tmpDate).month;
+                (*date)->year       = (*tmpDate).year;
+                (*date)->dayOfWeek  = (*tmpDate).dayOfWeek;
 
+                free(tmpDate);
+                
                 // http://de.wikipedia.org/wiki/Wochentagsberechnung
-                switch ((*date)->month)
-                {
-                    case 1:
-                    case 10:
-                        monatsziffer = 0;
-                        break;
+                
 
-                    case 5:
-                        monatsziffer = 1;
-                        break;
 
-                    case 8:
-                        monatsziffer = 2;
-                        break;
-
-                    case  2:
-                    case  3:
-                    case 11:
-                        monatsziffer = 3;
-                        break;
-
-                    case 6:
-                        monatsziffer = 4;
-                        break;
-
-                    case  9:
-                    case 12:
-                        monatsziffer = 5;
-                        break;
-
-                    case 4:
-                    case 7:
-                        monatsziffer = 6;
-                        break;
-
-                    default:
-                        assert(0); // Andere Werte dürfen hier nicht auftreten!
-                }
-
-                if ((*date)->month <= 2 && isLeapYear((*date)->year))
-                    korrektur = -1;
-                else
-                    korrektur = 0;
-
-                (*date)->dayOfWeek = (
-                                      ((*date)->day % 7) // Tagesziffer
-                                      + (monatsziffer) // Monatsziffer
-                                      + ( ( ((*date)->year % 100) + ((*date)->year % 100 / 4) ) % 7 ) // Jahresziffer
-                                      + ( ( 3 - ( ((*date)->year / 100) % 4 ) ) * 2 ) // Jahrhundertziffer
-                                      + (korrektur) // Schaltjahreskorrektur
-                                      ) % 7;
-
+                //(*date)->dayOfWeek = getDayOfWeek(*date);
+                
                 return 0; // Everything fine
             }
             else
@@ -291,6 +248,68 @@ int getDate(char const *Prompt, TDate **date)
     return 1;
 }
 
+int getDayOfWeek(TDate * date)
+{
+    int i;
+    int Fix;
+    int ValueOfMonth;
+    
+    switch ((date)->month)
+    {
+        case 1:
+        case 10:
+            ValueOfMonth = 0;
+            break;
+            
+        case 5:
+            ValueOfMonth = 1;
+            break;
+            
+        case 8:
+            ValueOfMonth = 2;
+            break;
+            
+        case  2:
+        case  3:
+        case 11:
+            ValueOfMonth = 3;
+            break;
+            
+        case 6:
+            ValueOfMonth = 4;
+            break;
+            
+        case  9:
+        case 12:
+            ValueOfMonth = 5;
+            break;
+            
+        case 4:
+        case 7:
+            ValueOfMonth = 6;
+            break;
+            
+        default:
+            assert(0); // Andere Werte dürfen hier nicht auftreten!
+    }
+
+    
+    if ((date)->month <= 2 && isLeapYear((date)->year))
+        Fix = -1;
+    else
+        Fix = 0;
+    
+    
+    i = (
+        ((date)->day % 7) // Tagesziffer
+        + (ValueOfMonth) // Monatsziffer
+        + ( ( ((date)->year % 100) + ((date)->year % 100 / 4) ) % 7 ) // Jahresziffer
+        + ( ( 3 - ( ((date)->year / 100) % 4 ) ) * 2 ) // Jahrhundertziffer
+        + (Fix) // Schaltjahreskorrektur
+        ) % 7;
+    
+    return i;
+}
 int getTime(char const *Prompt, TTime **Time)
 {
     char UserInput[7];
@@ -299,7 +318,6 @@ int getTime(char const *Prompt, TTime **Time)
 
 // Usereingabe
 
-    printf("\n");
     printf("%s", Prompt);
     ReadSuccessfully = scanf("%6[^\n]", UserInput);
     clearBuffer();
@@ -363,8 +381,8 @@ char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm
             strcpy(str, shortForm ? "Sa" : "Samstag");
             break;
 
-        default:
-            assert(0); // Das darf nicht passieren!
+//        default:
+//            assert(0); // Das darf nicht passieren!
     }
 
     return str;
@@ -372,22 +390,22 @@ char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm
 
 void printTime(TTime *time)
 {
-    printf("%hu", time->hour);
+    printf("%02hu", time->hour);
     printf(":");
-    printf("%hu", time->minute);
+    printf("%02hu", time->minute);
 }
 
-void printDate(TDate *date)
+void printDate(TDate date)
 {
     char weekStr[10];
 
-    printf("%s", weekDayToStr(weekStr, date->dayOfWeek, 0));
+    printf("%s", weekDayToStr(weekStr, date.dayOfWeek, 0));
     printf(", der ");
-    printf("%hu", date->day);
+    printf("%02hu", date.day);
     printf(".");
-    printf("%hu", date->month);
+    printf("%02hu", date.month);
     printf(".");
-    printf("%hu", date->year);
+    printf("%04hu", date.year);
     printf(":\n");
 }
 
@@ -396,19 +414,18 @@ void printAppointment(TAppointment Appointment, int DoPrintDate)
 // Ausgabe des Datum wenn DoPrintDate != 0
     if(DoPrintDate)
     {
-        printf("------------------------------------------------------------------------------------\n");
-        printDate(Appointment.date);
+        //printf("------------------------------------------------------------------------------------\n");
+        printDate(*Appointment.date);
         printf("------------------------------\n");
     }
     
-    if(Appointment.time->hour != '\0' && Appointment.time->minute != '\0')
-    {
-        printTime(Appointment.time);
-    }
+    printf("   ");
+    printTime(Appointment.time);
+
     
     printf(" -> ");
-    printf("%s |", Appointment.location);
-    printf("%s\n", Appointment.description);
+    printf("%-15.15s |", Appointment.location);
+    printf("%-30.30s\n", Appointment.description);
     
 
 }

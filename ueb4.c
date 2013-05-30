@@ -10,7 +10,7 @@
 int main()
 {
     int MenuSelection;
-    char const * const MenuTitle = "Terminverwaltung  Ver. 0.4.0";
+    char const * const MenuTitle = "Terminverwaltung  Ver. 0.4.2";
 
     unsigned short const nOfMenuPoints = 7;
     char const * MenuOptions[nOfMenuPoints];
@@ -46,5 +46,6 @@ int main()
 
     } while(MenuSelection != 7);
 
+    
     return 0;
 }

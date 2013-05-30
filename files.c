@@ -94,7 +94,7 @@ int saveCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 
     }else
     {
-        printf("Calender-File konnte nicht erzeugt/geoeffnet werden!");
+        printf("Calender-File konnte nicht erzeugt/geoeffnet werden!\n");
 
         fclose(CalendarFileStream);
         return 0;
@@ -130,18 +130,18 @@ int checkForCharacteristic(char* CurrentLineAsString, char* Characteristic)
                 l++;
             }
             
+// wenn die Charakteristik erkannt wurde wird der Funktionswert 0 zurueckgegeben            
             if(l == strlen(Characteristic))
             {
                 return 0;
+            }else
+            {
+                return 1; 
             }
         }
     }
-
-// wenn die Charakteristik erkannt wurde wird der Funktionswert 0 zurueckgegeben
     
-    {
-        return 1;
-    }
+    return 1;
 }
 
 int cleanStringFromCharacteristic(char * CurrentLineAsString, char * Characteristic, char * CurrentCleanString)
@@ -171,11 +171,11 @@ int cleanStringFromCharacteristic(char * CurrentLineAsString, char * Characteris
         }
        
         
-        return 1;
+        return 0;
         
     }else
     {
-        return 1;
+        return 0;
     }
 }
 
@@ -194,6 +194,12 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
     char CurrentCleanString[90];
     
 
+    Calendar[*AppointmentCount].time = malloc(sizeof(TTime));
+    Calendar[*AppointmentCount].date = malloc(sizeof(TDate));
+    Calendar[*AppointmentCount].description = (char *)malloc(sizeof(char)*strlen(CurrentLineAsString));
+    Calendar[*AppointmentCount].duration = malloc(sizeof(TTime));
+    Calendar[*AppointmentCount].location = (char *)malloc(sizeof(char)*strlen(CurrentLineAsString));
+    
 // Ueberpruefen, ob der aktuelle String signalisiert, dass keine weiteren Informationen zu diesem Appointment vorliegen
     do
     {                          
@@ -201,61 +207,74 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
         if(copyLineInString(CurrentLineAsString, CalendarFileStream) && checkForCharacteristic(CurrentLineAsString, "</Appointment>") != 0)
         
         {
+
+            
 // Prueft ob bzw. welche Charakteristik vorliegt und uebergibt den aktuellen String der jeweilgen Funktion
             if(TimeFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Time>") == 0)
                 
             {
-                Calendar[*AppointmentCount].time = malloc(sizeof(TTime));
-
-                cleanStringFromCharacteristic(CurrentLineAsString, "<Time>", CurrentCleanString);
                 
-                getTimeFromString(CurrentCleanString, Calendar[*AppointmentCount].time);
                 
-                TimeFound = 1;
+                if(Calendar[*AppointmentCount].time)
+                {
+                    cleanStringFromCharacteristic(CurrentLineAsString, "<Time>", CurrentCleanString);
+                
+                    getTimeFromString(CurrentCleanString, Calendar[*AppointmentCount].time);
+                
+                    TimeFound = 1;
+                }
                 
             }else if(DateFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Date>") == 0)
             
             {
-                Calendar[*AppointmentCount].date = malloc(sizeof(TDate));
 
-                cleanStringFromCharacteristic(CurrentLineAsString, "<Date>", CurrentCleanString);
+                if(Calendar[*AppointmentCount].date)
+                {
+                    cleanStringFromCharacteristic(CurrentLineAsString, "<Date>", CurrentCleanString);
                 
-                getDateFromString(CurrentCleanString, Calendar[*AppointmentCount].date);
+                    getDateFromString(CurrentCleanString, Calendar[*AppointmentCount].date);
                 
-                DateFound = 1;
+                    DateFound = 1;
+                }
             
             }else if(DescriptionFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Description>") == 0)
             
             {
-                Calendar[*AppointmentCount].description = (char *)malloc(sizeof(char)*strlen(CurrentLineAsString));
                 
-                cleanStringFromCharacteristic(CurrentLineAsString, "<Description>", CurrentCleanString);
+                if(Calendar[*AppointmentCount].description)
+                {
+                    cleanStringFromCharacteristic(CurrentLineAsString, "<Description>", CurrentCleanString);
 
-                strcpy(Calendar[*AppointmentCount].description, CurrentCleanString);
+                    strcpy(Calendar[*AppointmentCount].description, CurrentCleanString);
                 
-                DescriptionFound = 1;
+                    DescriptionFound = 1;
+                }
             
             }else if(DurationFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Duration>") == 0)
             
             {
-                Calendar[*AppointmentCount].duration = malloc(sizeof(TTime));
                 
-                cleanStringFromCharacteristic(CurrentLineAsString, "<Duration>", CurrentCleanString);
+                if(Calendar[*AppointmentCount].duration)
+                {
+                    cleanStringFromCharacteristic(CurrentLineAsString, "<Duration>", CurrentCleanString);
                 
-                getTimeFromString(CurrentCleanString, Calendar[*AppointmentCount].duration);
+                    getTimeFromString(CurrentCleanString, Calendar[*AppointmentCount].duration);
                 
-                DurationFound = 1;
+                    DurationFound = 1;
+                }
             
             }else if(LocationFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Location>") == 0)
             
             {
-                Calendar[*AppointmentCount].location = (char *)malloc(sizeof(char)*strlen(CurrentLineAsString));
                 
-                cleanStringFromCharacteristic(CurrentLineAsString, "<Location>", CurrentCleanString);
+                if(Calendar[*AppointmentCount].location)
+                {
+                    cleanStringFromCharacteristic(CurrentLineAsString, "<Location>", CurrentCleanString);
                 
-                strcpy(Calendar[*AppointmentCount].location, CurrentCleanString);
+                    strcpy(Calendar[*AppointmentCount].location, CurrentCleanString);
                 
-                LocationFound = 1;
+                    LocationFound = 1;
+                }
             
             }
 
@@ -265,6 +284,7 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
             
         //if(DateFound == 1)
         //{
+        
             return 1;
         //}else
         //{
@@ -289,22 +309,3 @@ int copyLineInString(char * LineAsString, FILE * CalendarFileStream)
     return 0;
 }
 
-
-
-
-
-/*
-int numberOFLinesInFile(FILE *CalendarFileStream)
-{
-    unsigned int MaxLengthOfLine = 101;
-    char DataFromCurrentLine[MaxLengthOfLine+1];
-    unsigned int NumberOfLines = 0;
-
-    while(fgets(DataFromCurrentLine, MaxLengthOfLine, CalendarFileStream) != NULL)
-    {
-        NumberOfLines++;
-    }
-
-    return NumberOfLines;
-}
-*/
