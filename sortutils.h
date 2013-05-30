@@ -4,6 +4,6 @@
 #include "datastructure.h"
 
 
-void swapAppointments(TAppointment Appointment1, TAppointment Appointment2);
+void swapAppointments(TAppointment * Appointment1, TAppointment * Appointment2);
 
 #endif

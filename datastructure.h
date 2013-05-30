@@ -12,7 +12,6 @@ typedef struct
 {
     unsigned short minute;
     unsigned short hour;
-//    TimeOfDay TimeOfDay;
 } TTime;
 
 typedef struct
@@ -32,7 +31,5 @@ typedef struct
     char *location;
 } TAppointment;
 
-extern unsigned short AppointmentCount;
-extern TAppointment Calendar[];
 
 #endif // DATASTRUCTURE_H_INCLUDED

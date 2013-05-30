@@ -10,12 +10,15 @@
 #include <string.h>
 
 // Globale Variablen (pfui)
-unsigned short AppointmentCount = 0;
-TAppointment Calendar[MAX_APPOINTMENTS];
+// dieser scheiss hier: unsigned short AppointmentCount;
 
-int readFilesAtStartup()
+
+//TAppointment * Calendar;
+
+int readFilesAtStartup(TAppointment * Calendar, unsigned short * AppointmentCount)
 {
-    if(loadCalendar(Calendar, &AppointmentCount) == 0)
+    
+    if(loadCalendar(Calendar, AppointmentCount) == 0)
     {
         return 0;
     }else
@@ -24,7 +27,7 @@ int readFilesAtStartup()
     }
 }
 
-void createAppointment()
+void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCount)
 {
     TAppointment TmpAppointment;
 
@@ -39,7 +42,7 @@ void createAppointment()
 
 // Ausgabe der Ueberschrift
 
-    printf(Title);
+    printf("%s", Title);
     printf("\n");
     printLine('=', strlen(Title));
     printf("\n");
@@ -67,7 +70,7 @@ void createAppointment()
         switch(getText(DescriptionPrompt, 100, &TmpAppointment.description))
         {
             case 1: j = 1;                                                                                                                                          break;
-            case 2: j = askPolarQuestion("Sie haben keine Beschreibung eingegeben.\nMöchten Sie dieses Feld frei lassen(Ja) oder die Eingabe wiederholen(Nein)?");   break;
+            case 2: j = askPolarQuestion("Sie haben keine Beschreibung eingegeben.\nMoechten Sie dieses Feld frei lassen(Ja) oder die Eingabe wiederholen(Nein)?");   break;
             case 3: j = 0;  printf("Ihre Eingabe ist zu lang.\nBitte beschraenken Sie sich auf 100 Zeichen.");                                                       break;
         }
     }
@@ -81,7 +84,7 @@ void createAppointment()
         switch(getText(LocationPrompt, 15, &TmpAppointment.location))
         {
             case 1: j = 1;                                                                                                                                          break;
-            case 2: j = askPolarQuestion("Sie haben keineb Ort eingegeben.\nMöchten Sie dieses Feld frei lassen(Ja) oder die Eingabe wiederholen(Nein)?");           break;
+            case 2: j = askPolarQuestion("Sie haben keineb Ort eingegeben.\nMoechten Sie dieses Feld frei lassen(Ja) oder die Eingabe wiederholen(Nein)?");           break;
             case 3: j = 0;  printf("Ihre Eingabe ist zu lang.\nBitte beschraenken Sie sich auf 15 Zeichen.");                                                        break;
         }
     }
@@ -95,7 +98,7 @@ void createAppointment()
 
 //Uebergabe des erstellten Termins an den Calendar-String
 
-    Calendar[AppointmentCount] = TmpAppointment;
+//    Calendar[AppointmentCount] = TmpAppointment;
     AppointmentCount++;
 
     printf("Termin wurde gespeichert!");
@@ -103,34 +106,36 @@ void createAppointment()
     waitForEnter();
 }
 
-void editAppointment()
+void editAppointment(TAppointment * Calendar, unsigned short * AppointmentCount)
 {
     printf("editAppointment()\n\n");
     waitForEnter();
 }
 
-void deleteAppointment()
+
+void deleteAppointment(TAppointment * Calendar, unsigned short * AppointmentCount)
 {
     printf("deleteAppointment()\n\n");
 
-	-- AppointmentCount;
+	*(AppointmentCount) = *(AppointmentCount) - 1;
 
     waitForEnter();
 }
 
-void searchAppointment()
+
+void searchAppointment(TAppointment * Calendar, unsigned short AppointmentCount)
 {
     printf("searchAppointment()\n\n");
     waitForEnter();
 }
 
-void sortCalendar()
+void sortCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 {
     printf("sortCalendar()\n\n");
     waitForEnter();
 }
 
-void listCalendar()
+void listCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 {
     unsigned short i;
     char const * Headline = "Liste der Termine";
@@ -139,7 +144,7 @@ void listCalendar()
 // Ausgabe der Ueberschrift
     if(AppointmentCount)
     {
-        printf(Headline);
+        printf("%s", Headline);
         printf("\n");
         printLine('=', strlen(Headline));
     }else
@@ -180,11 +185,14 @@ void listCalendar()
 
 
         printAppointment(Calendar[i], DoPrintDate);
+        printf("------------------------------------------------------------------------------------\n");
+
 
     }
 
     waitForEnter();
 }
+
 
 void freeAppointment(TAppointment *appointment)
 {
@@ -195,8 +203,8 @@ void freeAppointment(TAppointment *appointment)
     free(appointment->location);
 }
 
-void quitCalendar()
+void quitCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 {
-    saveCalendar(Calendar, AppointmentCount);
+//    saveCalendar(Calendar, AppointmentCount);
     printf("Das Programm wird beendet");
 }

@@ -1,6 +1,7 @@
 #include "tools.h"
 #include "dateutils.h"
 #include "datastructure.h"
+#include "calendar.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -131,6 +132,7 @@ int getDateFromString(char const *datum, TDate *date)
     }
 
     if (cTag == NULL || cMonat == NULL || cJahr == NULL)
+        free(p);
         return 0; // Tag, Monat und Jahr müssen im Datum enthalten sein.
 
     if (anzPunkte != 2)
@@ -160,6 +162,7 @@ int getDateFromString(char const *datum, TDate *date)
 int getTimeFromString(char const *UserInput, TTime *time)
 {
     char* LocalTime;
+    TTime tmpTime;
     char LocalHours[3];
     char LocalMinutes[3];
 
@@ -171,20 +174,35 @@ int getTimeFromString(char const *UserInput, TTime *time)
 
     LocalHours[0] = LocalTime[0];
     LocalHours[1] = LocalTime[1];
-    LocalHours[2] = '\n';
+    LocalHours[2] = '\0';
     LocalMinutes[0] = LocalTime[3];
     LocalMinutes[1] = LocalTime[4];
-    LocalMinutes[2] = '\n';
-
-    time->hour = atoi(LocalHours);
-    time->minute = atoi(LocalMinutes);
-
-    if(time->hour < 0 || time->minute < 0)
-        return 0;
-
+    LocalMinutes[2] = '\0';
+    
     free(LocalTime);
+    
+    time = malloc(sizeof(TTime));
+    if (time)
+    {
+        tmpTime.hour = atoi(LocalHours);
+        tmpTime.minute = atoi(LocalMinutes);
+        
+        if(tmpTime.hour > 24 || tmpTime.minute > 60)
+        {
+            free(time);
+            return 0;
+        }
+        
+        time->hour = tmpTime.hour;
+        time->minute = tmpTime.minute;
+        
+        free(time);
+        return 1;
+    }
 
-    return 1;
+    return 0;
+    
+
 }
 
 int getDate(char const *Prompt, TDate **date)
@@ -263,14 +281,14 @@ int getDate(char const *Prompt, TDate **date)
                                       + (korrektur) // Schaltjahreskorrektur
                                       ) % 7;
 
-                return 1; // Everything fine
+                return 0; // Everything fine
             }
             else
-                return 0; // Speicher konnte nicht reserviert werden.
+                return 1; // Speicher konnte nicht reserviert werden.
         }
     }
 
-    return 0;
+    return 1;
 }
 
 int getTime(char const *Prompt, TTime **Time)
@@ -282,7 +300,7 @@ int getTime(char const *Prompt, TTime **Time)
 // Usereingabe
 
     printf("\n");
-    printf(Prompt);
+    printf("%s", Prompt);
     ReadSuccessfully = scanf("%6[^\n]", UserInput);
     clearBuffer();
 
@@ -301,6 +319,9 @@ int getTime(char const *Prompt, TTime **Time)
             {
                 return 0;           //Speicherplatz konnte nicht reserviert werden!
             }
+        }else
+        {
+            
         }
     }
 
@@ -351,9 +372,9 @@ char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm
 
 void printTime(TTime *time)
 {
-    printf("%uh", time->hour);
+    printf("%hu", time->hour);
     printf(":");
-    printf("%uh", time->minute);
+    printf("%hu", time->minute);
 }
 
 void printDate(TDate *date)
@@ -370,16 +391,25 @@ void printDate(TDate *date)
     printf(":\n");
 }
 
-void printAppointment(TAppointment* Appointment, int DoPrintDate)
+void printAppointment(TAppointment Appointment, int DoPrintDate)
 {
 // Ausgabe des Datum wenn DoPrintDate != 0
     if(DoPrintDate)
     {
-        printf("------------------------------------------------------------------------------------");
-        printDate(Appointment->date);
-        printf("------------------------------");
+        printf("------------------------------------------------------------------------------------\n");
+        printDate(Appointment.date);
+        printf("------------------------------\n");
     }
-
+    
+    if(Appointment.time->hour != '\0' && Appointment.time->minute != '\0')
+    {
+        printTime(Appointment.time);
+    }
+    
+    printf(" -> ");
+    printf("%s |", Appointment.location);
+    printf("%s\n", Appointment.description);
+    
 
 }
 

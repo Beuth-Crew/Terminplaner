@@ -3,9 +3,9 @@
 
 #include "datastructure.h"
 
-int readFilesAtStartup();
+int readFilesAtStartup(TAppointment * Calendar, unsigned short * AppointmentCount);
 
-void createAppointment();
+void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCount);
 /******************************************************
  * FUNCTION:                createAppointment
  *-----------------------------------------------------
@@ -22,7 +22,7 @@ void createAppointment();
  * CHANGES     :            -
  ******************************************************/
 
-void editAppointment();
+void editAppointment(TAppointment * Calendar, unsigned short * AppointmentCount);
 /******************************************************
  * FUNCTION:                editAppointment
  *-----------------------------------------------------
@@ -39,7 +39,7 @@ void editAppointment();
  * CHANGES     :            -
  ******************************************************/
 
-void deleteAppointment();
+void deleteAppointment(TAppointment * Calendar, unsigned short * AppointmentCount);
 /******************************************************
  * FUNCTION:                deleteAppointment
  *-----------------------------------------------------
@@ -56,7 +56,7 @@ void deleteAppointment();
  * CHANGES     :            -
  ******************************************************/
 
-void searchAppointment();
+void searchAppointment(TAppointment * Calendar, unsigned short AppointmentCount);
 /******************************************************
  * FUNCTION:                searchAppointment
  *-----------------------------------------------------
@@ -73,7 +73,7 @@ void searchAppointment();
  * CHANGES     :            -
  ******************************************************/
 
-void sortCalendar();
+void sortCalendar(TAppointment * Calendar, unsigned short AppointmentCount);
 /******************************************************
  * FUNCTION:                sortCalendar
  *-----------------------------------------------------
@@ -90,7 +90,7 @@ void sortCalendar();
  * CHANGES     :            -
  ******************************************************/
 
- void listCalendar();
+ void listCalendar(TAppointment * Calendar, unsigned short AppointmentCount);
 /******************************************************
  * FUNCTION:                listCalendar
  *-----------------------------------------------------
@@ -112,6 +112,6 @@ void sortCalendar();
  */
 void freeAppointment(TAppointment *appointment);
 
-void quitCalendar();
+void quitCalendar(TAppointment * Calendar, unsigned short AppointmentCount);
 
 #endif // CALENDAR_H_INCLUDED

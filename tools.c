@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "datastructure.h"
+#include "calendar.h"
 
 /*
     Statische Funktion, die einen Fehlertext in der Konsole ausgibt.
@@ -104,7 +105,7 @@ int getText(char const *prompt, unsigned short maxLen, char **str)
         sprintf(format, "%%%hu[^\n]", maxLen);
         do
         {
-            printf(prompt);
+            printf("%s", prompt);
             scanRet = scanf(format, UserInput);
             clearBuffer(); // Notwendig?
             if (scanRet == 1)
@@ -141,7 +142,7 @@ int askPolarQuestion(char * Prompt)
 
     do
     {
-        printf(Prompt);
+        printf("%s", Prompt);
 
 // Benutzereingabe einlesen
 

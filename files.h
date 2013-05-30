@@ -66,6 +66,9 @@ int checkForCharacteristic(char* CurrentLineAsString, char* Characteristic);
  ******************************************************/
 
 
+int cleanStringFromCharacteristic(char * CurrentLineAsString, char * Characteristic, char * CurrentCleanString);
+
+
 //int numberOFLinesInFile(FILE *CalendarFileStream);
 /******************************************************
  * FUNCTION:                numberOFLinesInFile
@@ -105,6 +108,6 @@ int copyLineInString(char * LineAsString, FILE * CalendarFileStream);
  ******************************************************/
 
 
-int loadAppointment(FILE * CalendarFileStream, TAppointment* Calendar, unsigned short AppointmentCount, char * CurrentLineAsString);
+int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned short *AppointmentCount, char * CurrentLineAsString);
 
 #endif

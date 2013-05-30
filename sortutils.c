@@ -1,11 +1,12 @@
 #include "datastructure.h"
+#include "calendar.h"
 
 
-void swapAppointments(TAppointment Appointment1, TAppointment Appointment2)
+void swapAppointments(TAppointment * Appointment1, TAppointment * Appointment2)
 {
     TAppointment temp;
 
-    temp = Appointment1;
-    Appointment1 = Appointment2;
-    Appointment2 = temp;
+    temp = *Appointment1;
+    *Appointment1 = *Appointment2;
+    *Appointment2 = temp;
 }

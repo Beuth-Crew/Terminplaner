@@ -80,7 +80,7 @@ int getDateFromString(char const *datum, TDate *date);
  * CHANGES     :            -
  ******************************************************/
 
- int getTimeFromString(char const *Time1, TTime *Time2); //-- WORK IN PROGRESS --
+ int getTimeFromString(char const *UserInput, TTime *time);
 /******************************************************
  * FUNCTION:                getTimeFromString
  *-----------------------------------------------------
