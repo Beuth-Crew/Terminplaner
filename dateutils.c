@@ -147,12 +147,71 @@ int getDateFromString(char const *datum, TDate *date)
     return 1;
 }
 
+DayOfWeek calculateDayOfWeek(TDate const *date)
+{
+    short korrektur; // Schaltjahreskorrektur, für die Berechnung des Wochentages
+    unsigned short monatsziffer = 0; // Für die Berechnung des Wochentages
+
+    assert(date); // Zur Sicherheit
+
+    // http://de.wikipedia.org/wiki/Wochentagsberechnung
+    switch (date->month)
+    {
+        case 1:
+        case 10:
+            monatsziffer = 0;
+            break;
+
+        case 5:
+            monatsziffer = 1;
+            break;
+
+        case 8:
+            monatsziffer = 2;
+            break;
+
+        case  2:
+        case  3:
+        case 11:
+            monatsziffer = 3;
+            break;
+
+        case 6:
+            monatsziffer = 4;
+            break;
+
+        case  9:
+        case 12:
+            monatsziffer = 5;
+            break;
+
+        case 4:
+        case 7:
+            monatsziffer = 6;
+            break;
+
+        default:
+            assert(0); // Andere Werte dürfen hier nicht auftreten!
+    }
+
+    if (date->month <= 2 && isLeapYear(date->year))
+        korrektur = -1;
+    else
+        korrektur = 0;
+
+    return (
+            (date->day % 7) // Tagesziffer
+          + (monatsziffer) // Monatsziffer
+          + ( ( (date->year % 100) + (date->year % 100 / 4) ) % 7 ) // Jahresziffer
+          + ( ( 3 - ( (date->year / 100) % 4 ) ) * 2 ) // Jahrhundertziffer
+          + (korrektur) // Schaltjahreskorrektur
+           ) % 7;
+}
+
 int getDate(char const *aufforderung, TDate **date)
 {
     char eingabe[12];
     int anzEingelesen; // Anzahl richtig eingelesener Werte
-    short korrektur; // Schaltjahreskorrektur, für die Berechnung des Wochentages
-    unsigned short monatsziffer = 0; // Für die Berechnung des Wochentages
     TDate tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert wird.
 
     printf("\n%s", aufforderung);
@@ -170,58 +229,8 @@ int getDate(char const *aufforderung, TDate **date)
                 (*date)->month = tmpDate.month;
                 (*date)->year = tmpDate.year;
 
-                // http://de.wikipedia.org/wiki/Wochentagsberechnung
-                switch ((*date)->month)
-                {
-                    case 1:
-                    case 10:
-                        monatsziffer = 0;
-                        break;
-
-                    case 5:
-                        monatsziffer = 1;
-                        break;
-
-                    case 8:
-                        monatsziffer = 2;
-                        break;
-
-                    case  2:
-                    case  3:
-                    case 11:
-                        monatsziffer = 3;
-                        break;
-
-                    case 6:
-                        monatsziffer = 4;
-                        break;
-
-                    case  9:
-                    case 12:
-                        monatsziffer = 5;
-                        break;
-
-                    case 4:
-                    case 7:
-                        monatsziffer = 6;
-                        break;
-
-                    default:
-                        assert(0); // Andere Werte dürfen hier nicht auftreten!
-                }
-
-                if ((*date)->month <= 2 && isLeapYear((*date)->year))
-                    korrektur = -1;
-                else
-                    korrektur = 0;
-
-                (*date)->dayOfWeek = (
-                                       ((*date)->day % 7) // Tagesziffer
-                                     + (monatsziffer) // Monatsziffer
-                                     + ( ( ((*date)->year % 100) + ((*date)->year % 100 / 4) ) % 7 ) // Jahresziffer
-                                     + ( ( 3 - ( ((*date)->year / 100) % 4 ) ) * 2 ) // Jahrhundertziffer
-                                     + (korrektur) // Schaltjahreskorrektur
-                                     ) % 7;
+                // todo Wochentag berechnen
+                (*date)->dayOfWeek = calculateDayOfWeek(*date);
 
                 return 1; // Everything fine
             }
@@ -268,4 +277,10 @@ void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
         default:
             assert(0); // Das darf nicht passieren!
     }
+}
+
+// todo implementieren
+int isTimeValid(TTime const *time)
+{
+    return 1;
 }

@@ -24,6 +24,9 @@ int isLeapYear(int jahr);
  * CHANGES     :            -
  ******************************************************/
 
+// todo is noch nicht implementiert.
+int isTimeValid(TTime const *time);
+
 int isDateValid(TDate const *date);
 /******************************************************
  * FUNCTION:                isDateValid
@@ -61,6 +64,8 @@ int getDateFromString(char const *datum, TDate *date);
  *           AT:            2013-04-13
  * CHANGES     :            -
  ******************************************************/
+
+DayOfWeek calculateDayOfWeek(TDate const *date);
 
 int getDate(char const *prompt, TDate **date);
 /******************************************************
