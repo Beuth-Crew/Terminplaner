@@ -11,7 +11,7 @@
 int loadCalendar(TAppointment * Calendar, unsigned short * AppointmentCount)
 {
     FILE *CalendarFileStream;
-    char DBFilePath[] = "/Volumes/HDD-DATA/C/Terminplaner/Terminplaner/Terminplaner/database/calendar.db";
+    char DBFilePath[] = "/Volumes/HDD-DATA/Downloads/Dropbox/Info/Ma/Terminplaner/database/calendar.db";
     //unsigned int AppointmentToRead;
     //unsigned int NumberOfLines;
     char CurrentLineAsString[100];
@@ -68,7 +68,7 @@ int saveCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 //    char Text[1000];
 //    int j = 0;
 
-    CalendarFileStream = fopen("/Volumes/HDD-DATA/C/Terminplaner/Terminplaner/Terminplaner/database/calendar.db", "wt");
+    CalendarFileStream = fopen("/Volumes/HDD-DATA/Downloads/Dropbox/Info/Ma/Terminplaner/database/calendar.db", "wt");
 
     if(CalendarFileStream)
     {
@@ -79,10 +79,21 @@ int saveCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
         for(i = 0; i < AppointmentCount; i++)
         {
             fprintf(CalendarFileStream," <Appointment>\n");
-            fprintf(CalendarFileStream,"  <Date>%02hu.%02hu.%04hu</Date>\n", Calendar[i].date->day, Calendar[i].date->month,Calendar[i].date->year);
-            fprintf(CalendarFileStream,"  <Description>%s</Description>\n", Calendar[i].description);
-            fprintf(CalendarFileStream,"  <Duration>%02hu:%02hu</Duration>\n", Calendar[i].duration->hour, Calendar[i].duration->minute);
-            fprintf(CalendarFileStream,"  <Location>%s</Location>\n", Calendar[i].location);
+            if(Calendar[i].time)
+                fprintf(CalendarFileStream,"  <Time>%02hu:%02hu</Time>\n", Calendar[i].time->hour, Calendar[i].time->minute);
+            
+            if(Calendar[i].date/*->day && Calendar[i].date->month && Calendar[i].date->year*/)
+                fprintf(CalendarFileStream,"  <Date>%02hu.%02hu.%04hu</Date>\n", Calendar[i].date->day, Calendar[i].date->month,Calendar[i].date->year);
+            
+            if(Calendar[i].description)
+                fprintf(CalendarFileStream,"  <Description>%s</Description>\n", Calendar[i].description);
+            
+            if(Calendar[i].duration)
+                fprintf(CalendarFileStream,"  <Duration>%02hu:%02hu</Duration>\n", Calendar[i].duration->hour, Calendar[i].duration->minute);
+            
+            if(Calendar[i].location)
+                fprintf(CalendarFileStream,"  <Location>%s</Location>\n", Calendar[i].location);
+            
             fprintf(CalendarFileStream," </Appointment>\n");
         }
 
@@ -193,12 +204,6 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
     
     char CurrentCleanString[90];
     
-
-    Calendar[*AppointmentCount].time = malloc(sizeof(TTime));
-    Calendar[*AppointmentCount].date = malloc(sizeof(TDate));
-    Calendar[*AppointmentCount].description = (char *)malloc(sizeof(char)*strlen(CurrentLineAsString));
-    Calendar[*AppointmentCount].duration = malloc(sizeof(TTime));
-    Calendar[*AppointmentCount].location = (char *)malloc(sizeof(char)*strlen(CurrentLineAsString));
     
 // Ueberpruefen, ob der aktuelle String signalisiert, dass keine weiteren Informationen zu diesem Appointment vorliegen
     do
@@ -213,7 +218,7 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
             if(TimeFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Time>") == 0)
                 
             {
-                
+                Calendar[*AppointmentCount].time = malloc(sizeof(TTime));
                 
                 if(Calendar[*AppointmentCount].time)
                 {
@@ -227,6 +232,7 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
             }else if(DateFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Date>") == 0)
             
             {
+                Calendar[*AppointmentCount].date = malloc(sizeof(TDate));
 
                 if(Calendar[*AppointmentCount].date)
                 {
@@ -240,6 +246,7 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
             }else if(DescriptionFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Description>") == 0)
             
             {
+                Calendar[*AppointmentCount].description = (char *)malloc(sizeof(char)*strlen(CurrentLineAsString));
                 
                 if(Calendar[*AppointmentCount].description)
                 {
@@ -253,6 +260,7 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
             }else if(DurationFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Duration>") == 0)
             
             {
+                Calendar[*AppointmentCount].duration = malloc(sizeof(TTime));
                 
                 if(Calendar[*AppointmentCount].duration)
                 {
@@ -266,7 +274,8 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
             }else if(LocationFound == 0 && checkForCharacteristic(CurrentLineAsString, "<Location>") == 0)
             
             {
-                
+                Calendar[*AppointmentCount].location = (char *)malloc(sizeof(char)*strlen(CurrentLineAsString));
+
                 if(Calendar[*AppointmentCount].location)
                 {
                     cleanStringFromCharacteristic(CurrentLineAsString, "<Location>", CurrentCleanString);
@@ -281,19 +290,42 @@ int loadAppointment(FILE * CalendarFileStream, TAppointment * Calendar, unsigned
             LinesToRead--;
         }else
         
-            
-        //if(DateFound == 1)
-        //{
+        /*
+        if(TimeFound == 0)
+        {
+            Calendar[*AppointmentCount].time->minute    = '\0';
+            Calendar[*AppointmentCount].time->hour      = '\0';
+        }
         
-            return 1;
-        //}else
-        //{
-        //    return 0;
-        //}
+        if(DateFound == 0)
+        {
+            Calendar[*AppointmentCount].date->day       = '\0';
+            Calendar[*AppointmentCount].date->month     = '\0';
+            Calendar[*AppointmentCount].date->year      = '\0';
+            Calendar[*AppointmentCount].date->dayOfWeek = '\0';
+        }
+        
+        if(DescriptionFound == 0)
+        {
+            Calendar[*AppointmentCount].description     = '\0';
+        }
+        
+        if(DurationFound == 0)
+        {
+            Calendar[*AppointmentCount].duration        = '\0';
+        }
+        
+        if(LocationFound == 0)
+        {
+            Calendar[*AppointmentCount].location        = '\0';
+        }
+        */
+
+        return 1;
 
     }while(LinesToRead);
     
-    return 1;
+    return 0;
 }
 
 

@@ -1,32 +1,32 @@
 <Calendar>
- <AppointmentCount>13</AppointmentCount>
+ <AppointmentCount>11</AppointmentCount>
  <Appointment>
   <Time>08:00</Time>
-  <Date>22.06.2013</Date>
   <Description>IN2 Uebung 2. Zusatztermin fuer beide Gruppen</Description>
-  <Duration>05:00</Duration>
   <Location>D 113</Location>
+  <Duration>05:00</Duration>
+  <Date>22.06.2013</Date>
  </Appointment>
  <Appointment>
-  <Time>08:00</Time>
   <Date>24.05.2013</Date>
   <Description>IN2 Uebung Gruppe 1</Description>
-  <Duration>01:35</Duration>
   <Location>D 113</Location>
+  <Time>08:00</Time>
+  <Duration>01:35</Duration>
  </Appointment>
  <Appointment>
-  <Time>08:00</Time>
   <Date>17.05.2013</Date>
   <Description>IN2 Uebung Gruppe 1</Description>
-  <Duration>01:30</Duration>
   <Location>D 113</Location>
+  <Time>08:00</Time>
+  <Duration>01:30</Duration>
  </Appointment>
  <Appointment>
-  <Time>10:00</Time>
   <Date>17.05.2013</Date>
-  <Description>IN2 Vorlesung</Description>
-  <Duration>01:35</Duration>
+  <Time>10:00</Time>
   <Location>H5</Location>
+  <Duration>01:35</Duration>
+  <Description>IN2 Vorlesung</Description>
  </Appointment>
  <Appointment>
   <Date>10.05.2013</Date>
@@ -34,57 +34,43 @@
  </Appointment>
  <Appointment>
   <Time>18:00</Time>
-  <Date>18.05.2013</Date>
   <Description>Party</Description>
   <Duration>12:00</Duration>
+  <Date>18.05.2013</Date>
  </Appointment>
  <Appointment>
   <Time>08:00</Time>
-  <Date>08.06.2013</Date>
   <Description>IN2 Uebung 1. Zusatztermin fuer beide Gruppen</Description>
-  <Duration>05:00</Duration>
   <Location>D 113</Location>
+  <Duration>05:00</Duration>
+  <Date>08.06.2013</Date>
  </Appointment>
  <Appointment>
-  <Time>10:00</Time>
   <Date>24.05.2013</Date>
-  <Description>IN2 Vorlesung</Description>
-  <Duration>01:29</Duration>
+  <Time>10:00</Time>
   <Location>H5</Location>
+  <Duration>01:29</Duration>
+  <Description>IN2 Vorlesung</Description>
  </Appointment>
  <Appointment>
   <Time>12:15</Time>
-  <Date>24.05.2013</Date>
   <Description>IN2 Uebung Gruppe 2</Description>
-  <Duration>01:35</Duration>
   <Location>D 113</Location>
+  <Duration>01:35</Duration>
+  <Date>24.05.2013</Date>
  </Appointment>
  <Appointment>
   <Time>08:00</Time>
-  <Date>29.06.2013</Date>
   <Description>IN2 Uebung 3. Zusatztermin fuer beide Gruppen</Description>
-  <Duration>05:00</Duration>
   <Location>D 113</Location>
+  <Duration>05:00</Duration>
+  <Date>29.06.2013</Date>
  </Appointment>
  <Appointment>
   <Time>12:15</Time>
-  <Date>17.05.2013</Date>
   <Description>IN2 Uebung Gruppe 2</Description>
-  <Duration>01:25</Duration>
   <Location>D 113</Location>
- </Appointment>
- <Appointment>
-  <Time>01:01</Time>
-  <Date>01.01.2000</Date>
-  <Description>Beschreibung</Description>
-  <Duration>00:00</Duration>
-  <Location>Ort</Location>
- </Appointment>
- <Appointment>
-  <Time>01:00</Time>
-  <Date>01.01.2000</Date>
-  <Description>eschreibung</Description>
-  <Duration>00:30</Duration>
-  <Location>ort</Location>
+  <Duration>01:25</Duration>
+  <Date>17.05.2013</Date>
  </Appointment>
 </Calendar>

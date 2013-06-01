@@ -44,23 +44,7 @@ int isDateValid(TDate const *date);
  * CHANGES     :            -
  ******************************************************/
 
-int isTimeValid(TTime const *date);
-/******************************************************
- * FUNCTION:                isTimeValid
- *-----------------------------------------------------
- * DESCRIPTION:             Prueft, ob die uebergebene Zeit gueltig ist.
- * FIELD OF APPLICATION:    Local
- * PARAMETER:               -
- * TYP OF RESULT:           int
- * VALUE OF RESULT:
- *   -> NORMAL CASE:        0 (Time unguelig)
- *                          1 (Time gueltig)
- *   -> FAULT CASE:         -
- *-----------------------------------------------------
- * DEVELOPED BY:            Martin Ortel
- *           AT:            2013-04-13
- * CHANGES     :            -
- ******************************************************/
+
 
 int getDateFromString(char const *datum, TDate *date);
 /******************************************************

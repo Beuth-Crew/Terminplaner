@@ -7,6 +7,10 @@
 #include "datastructure.h"
 #include "calendar.h"
 
+#include <termios.h>
+#include <unistd.h>
+#include <errno.h>
+
 /*
     Statische Funktion, die einen Fehlertext in der Konsole ausgibt.
 */
@@ -178,4 +182,3 @@ int askPolarQuestion(char * Prompt)
    // Wird nie erreicht:
    return 0; // Nur um den Compiler zu beruhigen
 }
-

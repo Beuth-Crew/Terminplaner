@@ -8,26 +8,24 @@
 #include <errno.h>
 #include <string.h>
 
-int isLeapYear(int jahr)
+
+int isLeapYear(int year)
 {
-    if (jahr % 400 == 0)
+    
+    if (year % 400 == 0)
+    {
         return 1;
-    else if (jahr % 4 == 0 && jahr % 100 != 0)
+    }else if (year % 4 == 0 && year % 100 != 0)
+    {
         return 1;
+    }
     else
+    {
         return 0;
+    }
+
 }
 
- int isTimeValid(TTime const *Time)
- {
- if (Time->hour < 0 || Time->hour > 24)
- return 0;
-
- if (Time->minute < 0 || Time->minute > 59)
- return 0;
-
- return 1;
- }
 
 int isDateValid(TDate const *date)
 {
@@ -35,7 +33,7 @@ int isDateValid(TDate const *date)
         return 0;
 
     if (date->year < 1582)
-        return 0; // Der Gregorianische Kalender geht erst ab dem Jahr 1582 los.
+        return 0;                                                           // Der Gregorianische Kalender geht erst ab dem Jahr 1582 los.
 
     switch (date->month)
     {
@@ -84,11 +82,11 @@ int isDateValid(TDate const *date)
 
 int getDateFromString(char const *datum, TDate *date)
 {
-    char *cTag = NULL, *cMonat = NULL, *cJahr = NULL; // Tag, Monat, Jahr als Teilstring von datum
-    TDate tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert werden muss.
-    unsigned short anzPunkte = 0; // Es dürfen maximal zwei Punkte vorkommen
-    char *locDate; // lokales Datum ( = datum-Parameter)
-    char *p; // Iterator
+    char *cTag = NULL, *cMonat = NULL, *cJahr = NULL;                       // Tag, Monat, Jahr als Teilstring von datum
+    TDate tmpDate;                                                          // Damit das übergebene Datum im Fehlerfall nicht verändert werden muss.
+    unsigned short anzPunkte = 0;                                           // Es dürfen maximal zwei Punkte vorkommen
+    char *locDate;                                                          // lokales Datum ( = datum-Parameter)
+    char *p;                                                                // Iterator
 
     // Datum kopieren, damit der datum-Parameter nicht verändert werden muss.
     locDate = calloc(strlen(datum) + 1, sizeof(char));
@@ -103,29 +101,29 @@ int getDateFromString(char const *datum, TDate *date)
         if (*p >= '0' && *p <= '9')
         {
             if (cTag == NULL)
-                cTag = p; // Der Tag ist noch nicht gesetzt. Er kommt als erstes.
+                cTag = p;                                                   // Der Tag ist noch nicht gesetzt. Er kommt als erstes.
             else if (cMonat == NULL)
-                cMonat = p; // Der Monat ist noch nicht gesetzt. Er kommt als zweites.
+                cMonat = p;                                                 // Der Monat ist noch nicht gesetzt. Er kommt als zweites.
             else if (cJahr == NULL)
-                cJahr = p; // Das Jahr ist noch nicht gesetzt. Es kommt als letztes.
+                cJahr = p;                                                  // Das Jahr ist noch nicht gesetzt. Es kommt als letztes.
             else
             {
                 free(locDate);
                 return 0;
             }
 
-            while ((*(p + 1) >= '0' && *(p + 1) <= '9') && *(p + 1) != '\0') // Die Zahl bis zum Ende durchlaufen
+            while ((*(p + 1) >= '0' && *(p + 1) <= '9') && *(p + 1) != '\0')// Die Zahl bis zum Ende durchlaufen
                 ++p;
         }
         else if (*p == '.')
         {
             ++anzPunkte;
-            *p = '\0'; // Punkte werden durch \0 ersetzt.
+            *p = '\0';                                                      // Punkte werden durch \0 ersetzt.
         }
         else
         {
             free(locDate);
-            return 0; // Es ist ein ungŸltiges Zeichen enthalten.
+            return 0;                                                       // Es ist ein ungŸltiges Zeichen enthalten.
         }
 
         ++p;
@@ -133,11 +131,11 @@ int getDateFromString(char const *datum, TDate *date)
 
     if (cTag == NULL || cMonat == NULL || cJahr == NULL)
     {
-        free(p);
-        return 0; // Tag, Monat und Jahr müssen im Datum enthalten sein.
+        //free(p);
+        return 0;                                                           // Tag, Monat und Jahr müssen im Datum enthalten sein.
     }
     if (anzPunkte != 2)
-        return 0; // Es müssen genau zwei Punkte vorkommen
+        return 0;                                                           // Es müssen genau zwei Punkte vorkommen
 
     // Die Typecast (int -> unsigned short) sollten immer funktionieren,
     // da für Tag, Monat und Jahr eh nur kleine positive Zahlen zulässig sind.
@@ -184,21 +182,24 @@ int getTimeFromString(char const *UserInput, TTime *time)
     free(LocalTime);
     
  //   time = malloc(sizeof(TTime));
-    if (time)
+    if(LocalHours[0] >= '0' && LocalHours [0] <= '9' /*&& atoi(LocalHours) == 0*/)
     {
-        tmpTime.hour = atoi(LocalHours);
-        tmpTime.minute = atoi(LocalMinutes);
-        
-        if(tmpTime.hour > 24 || tmpTime.minute > 60)
+        if (time)
         {
-            free(time);
-            return 0;
+            tmpTime.hour = atoi(LocalHours);
+            tmpTime.minute = atoi(LocalMinutes);
+            
+            if(tmpTime.hour > 24 || tmpTime.minute > 60)
+            {
+                free(time);
+                return 0;
+            }
+            
+            time->hour = tmpTime.hour;
+            time->minute = tmpTime.minute;
+            
+            return 1;
         }
-        
-        time->hour = tmpTime.hour;
-        time->minute = tmpTime.minute;
-        
-        return 1;
     }
 
     return 0;
@@ -339,7 +340,7 @@ int getTime(char const *Prompt, TTime **Time)
             }
         }else
         {
-            
+            return 0;
         }
     }
 
@@ -390,9 +391,15 @@ char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm
 
 void printTime(TTime *time)
 {
-    printf("%02hu", time->hour);
-    printf(":");
-    printf("%02hu", time->minute);
+    if(time)
+    {
+        printf("%02hu", time->hour);
+        printf(":");
+        printf("%02hu", time->minute);
+    }else
+    {
+        printf("     ");
+    }
 }
 
 void printDate(TDate date)
@@ -424,10 +431,26 @@ void printAppointment(TAppointment Appointment, int DoPrintDate)
 
     
     printf(" -> ");
-    printf("%-15.15s |", Appointment.location);
-    printf("%-30.30s\n", Appointment.description);
     
+    if(Appointment.location)
+    {
+        printf("%-15.15s |", Appointment.location);
+    }else
+    {
+        printf("                |");
+    }
 
+    if(Appointment.description)
+    {
+        if(strlen(Appointment.description) > 50)
+        {
+            printf("%-50.50s...", Appointment.description);
+        }else
+        {
+            printf("%-50s", Appointment.description);
+        }
+    }
+    printf("\n");
 }
 
 int compareIntegers(int Integer1, int Integer2)

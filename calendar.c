@@ -5,33 +5,30 @@
 #include "dateutils.h"
 #include "tools.h"
 #include "files.h"
+#include "menu.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// Globale Variablen (pfui)
-// dieser scheiss hier: unsigned short AppointmentCount;
 
-
-//TAppointment * Calendar;
 
 int readFilesAtStartup(TAppointment * Calendar, unsigned short * AppointmentCount)
 {
+// Versuchen das Calendar-File zu laden
     
-    if(loadCalendar(Calendar, AppointmentCount) == 0)
-    {
-        return 0;
-    }else
-    {
-        return 1;
-    }
+    return loadCalendar(Calendar, AppointmentCount);
+
 }
+
+
 
 void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCount)
 {
-    TAppointment TmpAppointment;
 
-    char const *Title = "Erfassung eines neuen Termins";
+    TAppointment TmpAppointment;                                            // local Appointment to work with
+
+
+    char const *Title                = "Erfassung eines neuen Termins";     // Arrays used for prompts
     char const *DatePrompt           = "Datum         :";
     char const *TimePrompt           = "Uhrzeit       :";
     char const *DescriptionPrompt    = "Beschreibung  :";
@@ -40,14 +37,16 @@ void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCoun
 
     int j = 0;
 
-// Ausgabe der Ueberschrift
+    
+// prompt of title
 
     printf("%s", Title);
     printf("\n");
     printLine('=', strlen(Title));
     printf("\n");
 
-// Einlesen des Datums
+    
+// read in date
 
     while(getDate(DatePrompt, &TmpAppointment.date) != 0)
     {
@@ -55,7 +54,7 @@ void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCoun
     }
 
 
-// Einlesen der Zeit
+// read in time
 
     while(getTime(TimePrompt, &TmpAppointment.time) == 0)
     {
@@ -63,7 +62,7 @@ void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCoun
     }
 
 
-// Einlesen der Beschreibung
+// read in description
 
     while(j != 1)
     {
@@ -77,7 +76,8 @@ void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCoun
 
     j = 0;
 
-// Einlesen des Orts
+    
+// read in location
 
     while(j != 1)
     {
@@ -89,20 +89,26 @@ void createAppointment(TAppointment * Calendar, unsigned short * AppointmentCoun
         }
     }
 
-// Einlesen der Dauer
+    
+// read in duration
 
     while(getTime(DurationPrompt, &TmpAppointment.duration) == 0)
     {
         printf("Die Dauer konnte nicht interpretiert werden.\nBitte versuchen Sie es noch einmal.\n");
     }
 
-//Uebergabe des erstellten Termins an den Calendar-String
+    
+    
+// hand over tempAppointment to Calendar-Array
 
     Calendar[*AppointmentCount] = TmpAppointment;
+
+    
+// increase the AppointmentCount by one
     
     *(AppointmentCount) = *(AppointmentCount) + 1;
 
-    printf("Termin wurde gespeichert!");
+    printf("\nTermin wurde gespeichert!");
 
     waitForEnter();
 }
@@ -116,6 +122,7 @@ void editAppointment(TAppointment * Calendar, unsigned short * AppointmentCount)
 }
 
 
+
 void deleteAppointment(TAppointment * Calendar, unsigned short * AppointmentCount)
 {
     printf("deleteAppointment()\n\n");
@@ -126,17 +133,66 @@ void deleteAppointment(TAppointment * Calendar, unsigned short * AppointmentCoun
 }
 
 
+
 void searchAppointment(TAppointment * Calendar, unsigned short AppointmentCount)
 {
     printf("searchAppointment()\n\n");
     waitForEnter();
 }
 
+
+
 void sortCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 {
+    int MenuSelection;
+    char const * const MenuTitle = "Sortieren  Ver. 0.0.1";
+    
+    unsigned short const nOfMenuPoints = 9;
+    char const * MenuOptions[nOfMenuPoints];
+    MenuOptions[0] = "Kalender aufwaerts nach Datum und Uhrzeit sortieren";
+    MenuOptions[1] = "Kalender abwaerts nach Datum und Uhrzeit sortieren";
+    MenuOptions[2] = "Kalender aufwaerts nach Beschreibung, Datum und Uhrzeit sortieren";
+    MenuOptions[3] = "Kalender abwaerts nach Beschreibung, Datum und Uhrzeit sortieren";
+    MenuOptions[4] = "Kalender aufwaerts nach Ort, Datum und Uhrzeit sortieren";
+    MenuOptions[5] = "Kalender abwaerts nach Ort, Datum und Uhrzeit sortieren";
+    MenuOptions[6] = "Kalender aufwaerts nach Dauer, Datum und Uhrzeit sortieren";
+    MenuOptions[7] = "Kalender abwaerts nach Dauer, Datum und Uhrzeit sortieren";
+    MenuOptions[8] = "zurueck zum Hauptmenue";
+    
+
+    // Ausgabe des Sortiermenus
+    
+    do
+    {
+        MenuSelection = menu(MenuTitle, MenuOptions, nOfMenuPoints);
+        
+        
+        // Aufrufen der ausgewaehlten Funktion
+        
+        /*
+        switch(MenuSelection)
+        {
+            case 1: createAppointment(Calendar, &AppointmentCount);                     break;
+            case 2: editAppointment(Calendar, &AppointmentCount);                       break;
+            case 3: deleteAppointment(Calendar, &AppointmentCount);                     break;
+            case 4: searchAppointment(Calendar, AppointmentCount);                      break;
+            case 5: sortCalendar(Calendar, AppointmentCount);                           break;
+            case 6: listCalendar(Calendar, AppointmentCount);                           break;
+            case 7: quitCalendar(Calendar, AppointmentCount);                           break;
+            case 8:                                                                     break;
+        
+        }
+         */
+        
+    } while(MenuSelection != 9);
+    
+
+    
     printf("sortCalendar()\n\n");
     waitForEnter();
 }
+
+
 
 void listCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 {
@@ -200,6 +256,7 @@ void listCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 }
 
 
+
 void freeAppointment(TAppointment *appointment)
 {
     free(appointment->time);
@@ -208,6 +265,8 @@ void freeAppointment(TAppointment *appointment)
     free(appointment->duration);
     free(appointment->location);
 }
+
+
 
 void quitCalendar(TAppointment * Calendar, unsigned short AppointmentCount)
 {
