@@ -110,4 +110,9 @@ void sortCalendar();
  */
 void freeAppointment(TAppointment *appointment);
 
+/*
+  Befreiung für den Kalender
+*/
+void freeCalendar();
+
 #endif // CALENDAR_H_INCLUDED

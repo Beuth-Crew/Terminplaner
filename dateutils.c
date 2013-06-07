@@ -228,8 +228,6 @@ int getDate(char const *aufforderung, TDate **date)
                 (*date)->day = tmpDate.day;
                 (*date)->month = tmpDate.month;
                 (*date)->year = tmpDate.year;
-
-                // todo Wochentag berechnen
                 (*date)->dayOfWeek = calculateDayOfWeek(*date);
 
                 return 1; // Everything fine
@@ -283,4 +281,16 @@ void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
 int isTimeValid(TTime const *time)
 {
     return 1;
+}
+
+// todo implementieren
+void printTime(TTime const *time)
+{
+
+}
+
+// todo implementieren
+void printDate(TDate const *date)
+{
+
 }

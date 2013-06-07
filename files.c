@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-static unsigned short const maxLen = 255; // Maximale erlaubte Länge für einen Bezeichner.
+static unsigned short const maxLen = 255; // Maximale erlaubte Länge für einen XML-Bezeichner.
 
 /*
     Gibt 1 zurück, falls der String geschrieben werden konnte,

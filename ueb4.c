@@ -59,9 +59,7 @@ int main()
     } while(selection != 7);
 
     // Termine speichern
-    // todo remove
-    switch (saveCalendar("calendar.txt"))
-    //switch (saveCalendar(dbFile))
+    switch (saveCalendar(dbFile))
     {
         case 0: // Speichern erfolgreich!
             break;
@@ -80,8 +78,7 @@ int main()
     }
 
     // Speicher freigeben
-    for (i = 0; i < AppointmentCount; ++i)
-        freeAppointment(Calendar + i);
+    freeCalendar();
 
     return 0;
 }

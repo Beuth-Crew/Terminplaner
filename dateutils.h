@@ -89,6 +89,15 @@ int getDate(char const *prompt, TDate **date);
  ******************************************************/
 
 /*
+  getTime
+  todo implementieren
+*/
+int getTime(const char *prompt, TTime **time)
+{
+    return 0;
+}
+
+/*
     Rückgabe:
     - bei 0: "Sonntag"
     - bei 1: "Monatag"
@@ -103,5 +112,9 @@ int getDate(char const *prompt, TDate **date);
                             also z.B. "Mo" anstatt "Montag"
 */
 void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
+
+
+void printTime(TTime const *time);
+void printDate(TDate const *date);
 
 #endif // DATEUTILS_H_INCLUDED
