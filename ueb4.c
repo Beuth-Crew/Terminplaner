@@ -30,7 +30,7 @@ int main()
         Calendar[i].date = NULL;
         Calendar[i].time = NULL;
         Calendar[i].description = NULL;
-        Calendar[i].duration = 0;
+        Calendar[i].duration = NULL;
         Calendar[i].location = NULL;
     }
 
