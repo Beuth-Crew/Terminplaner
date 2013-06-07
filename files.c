@@ -12,7 +12,7 @@ static unsigned short const maxLen = 255; // Maximale erlaubte Länge für einen B
     Gibt 1 zurück, falls der String geschrieben werden konnte,
     andernfalls 0.
 */
-int fwriteStr(FILE *handle, char const *str)
+static int fwriteStr(FILE *handle, char const *str)
 {
     int ret = fprintf(handle, str); // String schreiben.
     return ret == strlen(str); // Prüfen, ob der String vollständig geschrieben werden konnte.

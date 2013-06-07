@@ -1,6 +1,8 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#define SAFE_FREE(x) { free((x)); (x) = NULL; }
+
 void clearScreen();
 /******************************************************
  * FUNCTION:                clearScreen

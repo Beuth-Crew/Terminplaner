@@ -47,10 +47,9 @@ void listCalendar()
 
 void freeAppointment(TAppointment *appointment)
 {
-    free(appointment->time);
-    free(appointment->description);
-    free(appointment->date);
-    free(appointment->duration);
-    free(appointment->location);
-    free(appointment);
+    SAFE_FREE(appointment->time);
+    SAFE_FREE(appointment->description);
+    SAFE_FREE(appointment->date);
+    SAFE_FREE(appointment->duration);
+    SAFE_FREE(appointment->location);
 }
