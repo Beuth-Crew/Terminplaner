@@ -28,6 +28,7 @@ typedef struct
     TDate *date;
     char *description;
     TTime *duration;
+    char *location;
 } TAppointment;
 
 extern unsigned short AppointmentCount;

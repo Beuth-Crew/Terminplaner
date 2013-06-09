@@ -1,6 +1,8 @@
 #ifndef CALENDAR_H_INCLUDED
 #define CALENDAR_H_INCLUDED
 
+#include "datastructure.h"
+
 void createAppointment();
 /******************************************************
  * FUNCTION:                createAppointment
@@ -103,5 +105,14 @@ void sortCalendar();
  * CHANGES     :            -
  ******************************************************/
 
+/*
+    Befreit den Termin.
+ */
+void freeAppointment(TAppointment *appointment);
+
+/*
+  Befreiung für den Kalender
+*/
+void freeCalendar();
 
 #endif // CALENDAR_H_INCLUDED

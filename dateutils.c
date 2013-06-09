@@ -1,26 +1,13 @@
 
 #include "tools.h"
 #include "dateutils.h"
+#include "datastructure.h"
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
 
-
-/*
-    Statische Funktion, die einen Fehlertext in der Konsole ausgibt.
-*/
-static void printErrorMessage()
-{
-    printf("Ungueltige Eingabe\n");
-}
-
-/*
-    Prüft, ob das übergebene Jahr ein Schaltjahr nach dem Gregorianischen Kalender ist.
-    Schaltjahre sind entweder durch 400 teilbar oder durch 4 aber nicht durch 100 teilbar.
-
-    Gibt 1 zurück, falls es ein Schaltjahr ist, andernfalls 0.
-*/
 int isLeapYear(int jahr)
 {
     if (jahr % 400 == 0)
@@ -31,30 +18,25 @@ int isLeapYear(int jahr)
         return 0;
 }
 
-/*
-    Prüft, ob das übergebene Datum gültig ist (ob es tatsächlich existiert).
-
-    Gibt 1 zurück, falls das Datum gültig ist, andernfalls 0.
-*/
-int isDateValid(int tag, int monat, int jahr)
+int isDateValid(TDate const *date)
 {
-    if (tag < 1)
+    if (date->day < 1)
         return 0;
 
-    if (jahr < 1582)
+    if (date->year < 1582)
         return 0; // Der Gregorianische Kalender geht erst ab dem Jahr 1582 los.
 
-    switch (monat)
+    switch (date->month)
     {
     case 2:
-        if (isLeapYear(jahr) == 1)
+        if (isLeapYear(date->year) == 1)
         {
-            if (tag > 29)
+            if (date->day > 29)
                 return 0;
         }
         else
         {
-            if (tag > 28)
+            if (date->day > 28)
                 return 0;
         }
 
@@ -68,7 +50,7 @@ int isDateValid(int tag, int monat, int jahr)
     case 10:
     case 12:
         // Monate mit 31 Tagen
-        if (tag > 31)
+        if (date->day > 31)
             return 0;
         break;
 
@@ -77,7 +59,7 @@ int isDateValid(int tag, int monat, int jahr)
     case 9:
     case 11:
         // Monate mit 30 Tagen
-        if (tag > 30)
+        if (date->day > 30)
             return 0;
 
         break;
@@ -89,115 +71,237 @@ int isDateValid(int tag, int monat, int jahr)
     return 1;
 }
 
-/*
-    Parst ein Datum aus einer Zeichenkette.
-
-    Gibt 1 zurück, falls ein GÜLTIGES Datum geparst werden kann, andernfalls 0.
-
-    Die Parameter int *tag, int *monat, int *jahr enthalten im Erfolgsfall das geparste Datum.
-
-    Hinweis: Die übergebene Zeichenkette wird in der Funktion verändert.
-*/
-int getDateFromString(char const *datum, int *tag, int *monat, int *jahr)
+int getDateFromString(char const *datum, TDate *date)
 {
     char *cTag = NULL, *cMonat = NULL, *cJahr = NULL; // Tag, Monat, Jahr als Teilstring von datum
-    int d, m, y; // Tag, Monat, Jahr
+    TDate tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert werden muss.
     unsigned short anzPunkte = 0; // Es dürfen maximal zwei Punkte vorkommen
-    char *date; // = datum (Parameter)
+    char *locDate; // lokales Datum ( = datum-Parameter)
+    char *p; // Iterator
 
-    // Datum kopieren, damit der übergebene String nicht verändert werden muss, sondern nur der lokale.
-    date = malloc(sizeof(char) * strlen(datum));
-    strcpy(date, datum);
+    // Datum kopieren, damit der datum-Parameter nicht verändert werden muss.
+    locDate = calloc(strlen(datum) + 1, sizeof(char));
+    if (locDate == NULL)
+        return 0; // Speicher kann nicht reserviert werden.
 
-    while (*date != '\0')
+    p = locDate;
+    strcpy(locDate, datum);
+
+    while (*p != '\0')
     {
-        if (*date >= '0' && *date <= '9')
+        if (*p >= '0' && *p <= '9')
         {
             if (cTag == NULL)
-                cTag = date; // Der Tag ist noch nicht gesetzt. Er kommt als erstes.
+                cTag = p; // Der Tag ist noch nicht gesetzt. Er kommt als erstes.
             else if (cMonat == NULL)
-                cMonat = date; // Der Monat ist noch nicht gesetzt. Er kommt als zweites.
+                cMonat = p; // Der Monat ist noch nicht gesetzt. Er kommt als zweites.
             else if (cJahr == NULL)
-                cJahr = date; // Das Jahr ist noch nicht gesetzt. Es kommt als letztes.
+                cJahr = p; // Das Jahr ist noch nicht gesetzt. Es kommt als letztes.
             else
             {
-                free(date);
+                free(locDate);
                 return 0;
             }
 
-            while ((*(date + 1) >= '0' && *(date + 1) <= '9') && *(date + 1) != '\0') // Die Zahl bis zum Ende durchlaufen
-                ++date;
+            while ((*(p + 1) >= '0' && *(p + 1) <= '9') && *(p + 1) != '\0') // Die Zahl bis zum Ende durchlaufen
+                ++p;
         }
-        else if (*date == '.')
+        else if (*p == '.')
         {
             ++anzPunkte;
-            *date = '\0'; // Punkte werden durch \0 ersetzt.
+            *p = '\0'; // Punkte werden durch \0 ersetzt.
         }
         else
         {
-            free(date);
+            free(locDate);
             return 0; // Es ist ein ungŸltiges Zeichen enthalten.
         }
 
-        ++date;
+        ++p;
     }
 
     if (cTag == NULL || cMonat == NULL || cJahr == NULL)
+    {
+        free(locDate);
         return 0; // Tag, Monat und Jahr müssen im Datum enthalten sein.
+    }
 
     if (anzPunkte != 2)
+    {
+        free(locDate);
         return 0; // Es müssen genau zwei Punkte vorkommen
+    }
 
-    d = atoi(cTag);     if (errno != 0) return 0;
-    m = atoi(cMonat);   if (errno != 0) return 0;
-    y = atoi(cJahr);    if (errno != 0) return 0;
+    // Die Typecast (int -> unsigned short) sollten immer funktionieren,
+    // da für Tag, Monat und Jahr eh nur kleine positive Zahlen zulässig sind.
+    tmpDate.day   = atoi(cTag);     if (errno != 0) return 0;
+    tmpDate.month = atoi(cMonat);   if (errno != 0) return 0;
+    tmpDate.year  = atoi(cJahr);    if (errno != 0) return 0;
 
-    if (isDateValid(d, m, y) == 0)
+    // Zur Sicherheit
+
+    if (isDateValid(&tmpDate) == 0)
+    {
+        free(locDate);
         return 0;
+    }
 
-    *tag    = d;
-    *monat  = m;
-    *jahr   = y;
+    assert(tmpDate.day <= 31);
+    assert(tmpDate.month <= 12);
 
-    free(date);
+    date->day = tmpDate.day;
+    date->month = tmpDate.month;
+    date->year = tmpDate.year;
+
+    free(locDate);
     return 1;
 }
 
-/*
-    Gibt die übergebene Zeichenkette auf dem Bildschirm aus und liest dann ein Datum vom Benutzer ein.
-
-    Die Parameter int *tag, int *monat, int *jahr enthalten im falle einer korrekten Benutzereingabe eingegebene Datum.
-
-    Gibt bei korrekter Datumseingabe 1 zurück, andernfalls 0.
-
-    Hinweis: Das Datum muss tatsächlich existieren.
-*/
-int getDate(char const *aufforderung, int *tag, int *monat, int *jahr)
+DayOfWeek calculateDayOfWeek(TDate const *date)
 {
-    char eingabe[11];
-    int anzEingelesen; // Anzahl richtig eingelesener Werte
-    int d, m, y; // Tag, Monat, Jahr
-    int weiter = 1;
+    short korrektur; // Schaltjahreskorrektur, für die Berechnung des Wochentages
+    unsigned short monatsziffer = 0; // Für die Berechnung des Wochentages
 
-    do
+    assert(date); // Zur Sicherheit
+
+    // http://de.wikipedia.org/wiki/Wochentagsberechnung
+    switch (date->month)
     {
-        printf("\n%s", aufforderung);
-        anzEingelesen = scanf("%10[^\n]", eingabe);
-        clearBuffer();
+        case 1:
+        case 10:
+            monatsziffer = 0;
+            break;
 
-        if (anzEingelesen == 1)
+        case 5:
+            monatsziffer = 1;
+            break;
+
+        case 8:
+            monatsziffer = 2;
+            break;
+
+        case  2:
+        case  3:
+        case 11:
+            monatsziffer = 3;
+            break;
+
+        case 6:
+            monatsziffer = 4;
+            break;
+
+        case  9:
+        case 12:
+            monatsziffer = 5;
+            break;
+
+        case 4:
+        case 7:
+            monatsziffer = 6;
+            break;
+
+        default:
+            assert(0); // Andere Werte dürfen hier nicht auftreten!
+    }
+
+    if (date->month <= 2 && isLeapYear(date->year))
+        korrektur = -1;
+    else
+        korrektur = 0;
+
+    return (
+            (date->day % 7) // Tagesziffer
+          + (monatsziffer) // Monatsziffer
+          + ( ( (date->year % 100) + (date->year % 100 / 4) ) % 7 ) // Jahresziffer
+          + ( ( 3 - ( (date->year / 100) % 4 ) ) * 2 ) // Jahrhundertziffer
+          + (korrektur) // Schaltjahreskorrektur
+           ) % 7;
+}
+
+int getDate(char const *aufforderung, TDate **date)
+{
+    char eingabe[12];
+    int anzEingelesen; // Anzahl richtig eingelesener Werte
+    TDate tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert wird.
+
+    printf("\n%s", aufforderung);
+    anzEingelesen = scanf("%11[^\n]", eingabe);
+    clearBuffer();
+
+    if (anzEingelesen == 1)
+    {
+        if (getDateFromString(eingabe, &tmpDate) == 1)
         {
-            if (getDateFromString(eingabe, &d, &m, &y) == 1)
+            *date = malloc(sizeof(TDate));
+            if (*date != NULL)
             {
-                weiter = 0; // Die Schleife verlassen
-                *tag = d;
-                *monat = m;
-                *jahr = y;
+                (*date)->day = tmpDate.day;
+                (*date)->month = tmpDate.month;
+                (*date)->year = tmpDate.year;
+                (*date)->dayOfWeek = calculateDayOfWeek(*date);
+
+                return 1; // Everything fine
             }
             else
-                printErrorMessage();
+                return 0; // Speicher konnte nicht reserviert werden.
         }
-    } while (weiter == 1);
+    }
 
+    free(*date);
+    return 0;
+}
+
+void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
+{
+    switch (dayOfWeek)
+    {
+        case So:
+            strcpy(str, shortForm ? "So" : "Sonntag");
+            break;
+
+        case Mo:
+            strcpy(str, shortForm ? "Mo" : "Montag");
+            break;
+
+        case Di:
+            strcpy(str, shortForm ? "Di" : "Dienstag");
+            break;
+
+        case Mi:
+            strcpy(str, shortForm ? "Mi" : "Mittwoch");
+            break;
+
+        case Do:
+            strcpy(str, shortForm ? "Do" : "Donnerstag");
+            break;
+
+        case Fr:
+            strcpy(str, shortForm ? "Fr" : "Freitag");
+            break;
+
+        case Sa:
+            strcpy(str, shortForm ? "Sa" : "Samstag");
+            break;
+
+        default:
+            assert(0); // Das darf nicht passieren!
+    }
+}
+
+// todo implementieren
+int isTimeValid(TTime const *time)
+{
     return 1;
+}
+
+// todo implementieren
+void printTime(TTime const *time)
+{
+
+}
+
+// todo implementieren
+void printDate(TDate const *date)
+{
+
 }

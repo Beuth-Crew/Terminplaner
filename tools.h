@@ -1,11 +1,13 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#define SAFE_FREE(x) { free((x)); (x) = NULL; }
+
 void clearScreen();
 /******************************************************
  * FUNCTION:                clearScreen
  *-----------------------------------------------------
- * DESCRIPTION:             ...
+ * DESCRIPTION:             Macht das Konsolenfenster wieder schön leer.
  * FIELD OF APPLICATION:    Global
  * PARAMETER:               -
  * TYP OF RESULT:           void
@@ -22,7 +24,7 @@ void clearBuffer();
 /******************************************************
  * FUNCTION:                clearBuffer
  *-----------------------------------------------------
- * DESCRIPTION:             ...
+ * DESCRIPTION:             Leert den Tastaturpuffer.
  * FIELD OF APPLICATION:    Global
  * PARAMETER:               -
  * TYP OF RESULT:           void
@@ -39,7 +41,11 @@ int askAgain();
 /******************************************************
  * FUNCTION:                askAgain
  *-----------------------------------------------------
- * DESCRIPTION:             ...
+ * DESCRIPTION:             Fragt den Benutzer, ob er noch ein mal möchte.
+ *                          Der Benutzer kann daraufhin eine Antwort eingeben. Bei 'j' oder 'J' wird
+ *                          der Wert 1 zurückgegeben. Bei 'n' oder 'N' wird 0 zurückgegeben.
+ *                          Andere Eingaben führen zu einer Fehlermeldung und wiederholter
+ *                          Benutzereingabe.
  * FIELD OF APPLICATION:    Global
  * PARAMETER:               -
  * TYP OF RESULT:           void
@@ -56,7 +62,8 @@ void waitForEnter();
 /******************************************************
  * FUNCTION:                waitForEnter
  *-----------------------------------------------------
- * DESCRIPTION:             ...
+ * DESCRIPTION:             Lässt den Benutzer Zeichen über die Tastatur eingeben.
+ *                          Die Funktion wird beendet, sobald der Benutzer [Enter] drückt.
  * FIELD OF APPLICATION:    Global
  * PARAMETER:               -
  * TYP OF RESULT:           void
@@ -89,6 +96,22 @@ void waitForEnter();
  * CHANGES     :            -
  ******************************************************/
 
+/*
+    Beschreibung:           Fordert den Benutzer zur Eingabe auf, liest einen String ein und
+                            speichert diesen in einem Array, dessen Speicher zur Laufzeit
+                            reserviert wird und genau die Größe der Zeichenkette hat.
+                            Gibt der Benutzer mehr Zeichen ein, als im maxLen-Parameter
+                            angegeben, wird der Rest des Strings abgeschnitten.
+                            WICHTIG: Der Speicher, der durch diese Funktion reserviert
+                            wird, muss später durch den Aufrufer wieder freigegeben werden.
+    Rückgabe:               Im Erfolgsfall 1, andernfalls 0.
+    Parameter:
+        prompt              Benutzeraufforderung, wird in die Konsole geprintet.
+        maxLen              maximale Zeichenanzahl der Benutzereingabe.
+        str                 Zeiger auf eine Zeichenkette (Zeiger auf ein char-Zeiger),
+                            enthält nach erfolgreicher Funktion die Benutzereingabe
+*/
+int getText(char const *prompt, unsigned short maxLen, char **str);
 
 #endif
 

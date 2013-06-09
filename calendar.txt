@@ -1,0 +1,21 @@
+<Calendar><AppointmentCount>5</AppointmentCount><Appointment><Description>ausschlafen</Description><Date>21.12.1988</Date></Appointment><Appointment><Date>17.05.2013</Date><Description>IN 2 – Uebung Gruppe 1</Description><Time>08:00</Time><Duration>01:30</Duration><Location>Raum D 113</Location></Appointment>
+	<Appointment>
+		< Date	> 17.05.2013 < / Date >
+		< Description >	IN 2 – Vorlesung <   / Description >
+		< Time	> 10:00 <   / Time	>
+		<	Duration	> 01:30	< / Duration  	>
+		< Location  > Raum H5	< / Location >
+	</Appointment>
+	<Appointment><Date>17.05.2013</Date><Description>IN 2 – Uebung Gruppe 2</Description ><Time>12:15</Time><Duration>01:30</Duration><Location>Raum D 113</Location ></Appointment>
+	<Appointment>
+		<Date>18.05.2013</Date>
+		<Description>Party</Description>
+		<Time>18:00</Time>
+
+
+		<Duration>10:00</Duration>
+
+
+	</Appointment>
+
+</Calendar>

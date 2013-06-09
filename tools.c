@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "tools.h"
 #include <stdlib.h>
+#include <string.h>
 
 /*
     Statische Funktion, die einen Fehlertext in der Konsole ausgibt.
@@ -12,9 +13,6 @@ static void printErrorMessage()
    printf("Ungueltige Eingabe");
 }
 
-/*
-    Macht das Konsolenfenster wieder schön leer.
-*/
 void clearScreen()
 {
     #ifdef _WINDOWS_
@@ -26,9 +24,6 @@ void clearScreen()
     #endif // _LINUX_
 }
 
-/*
-    Leert den Tastaturpuffer.
-*/
 void clearBuffer()
 {
    char x;
@@ -37,13 +32,6 @@ void clearBuffer()
    while (x != '\n');
 }
 
-/*
-    Fragt den Benutzer, ob er noch ein mal möchte.
-    Der Benutzer kann daraufhin eine Antwort eingeben. Bei 'j' oder 'J' wird
-    der Wert 1 zurückgegeben. Bei 'n' oder 'N' wird 0 zurückgegeben.
-    Andere Eingaben führen zu einer Fehlermeldung und wiederholter
-    Benutzereingabe.
-*/
 int askAgain()
 {
    int anzGelesen;
@@ -84,10 +72,6 @@ int askAgain()
    return 0; // Nur um den Compiler zu beruhigen
 }
 
-/*
-    Lässt den Benutzer Zeichen über die Tastatur eingeben.
-    Die Funktion wird beendet, sobald der Benutzer [Enter] drückt.
-*/
 void waitForEnter()
 {
     char x[2]; // 1 Zeichen + '\0'
@@ -97,9 +81,6 @@ void waitForEnter()
     clearBuffer();
 }
 
-/*
-    Gibt das übergebene Zeichen so oft hintereinander aus, wie im zweiten Parameter angegben wurde.
-*/
 void printLine(char printChar, int lineLength)
 {
     int i;
@@ -108,4 +89,47 @@ void printLine(char printChar, int lineLength)
         printf("%c", printChar);
 
     printf("\n");
+}
+
+int getText(char const *prompt, unsigned short maxLen, char **str)
+{
+    char format[20]; // Inhalt sieht nachher beispielsweise so aus (bei maxLen = 15): "%15[^\n]"
+    int scanRet;
+    int len; // Länge der vom Benutzer eingegebenen Zeichenkette
+    char *eingabe = calloc(maxLen + 1, sizeof(char));
+
+    if (eingabe != NULL)
+    {
+        sprintf(format, "%%%hu[^\n]", maxLen);
+        printf("%s", format);
+        do
+        {
+            printf("%s", prompt);
+            scanRet = scanf(format, eingabe);
+            clearBuffer(); // Notwendig?
+            if (scanRet == 1)
+            {
+                len = strlen(eingabe);
+                if (len > 0)
+                {
+                    // Für den String wird genau so viel Speicher reserviert, wie nötig ist.
+                    *str = calloc(len + 1, sizeof(char));
+                    if (*str != NULL)
+                        strcpy(*str, eingabe); // Benutzereingabe in das "zurückzugebende" Argumgent kopieren
+                    else
+                    {
+                        free(eingabe);
+                        return 0; // Es konnte kein Speicher reserviert werden
+                    }
+                }
+                else
+                    scanRet = 0; // Der Benutzer hat nur die Eingabetaste gedrückt.
+            }
+        } while (scanRet != 1);
+    }
+    else
+        return 0; // Speicher konnte nicht reserviert werden
+
+    free(eingabe);
+    return 1; // Alles ok
 }
