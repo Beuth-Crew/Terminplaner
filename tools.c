@@ -98,7 +98,7 @@ int getText(char const *prompt, unsigned short maxLen, char **str)
     int len; // Länge der vom Benutzer eingegebenen Zeichenkette
     char *eingabe = calloc(maxLen + 1, sizeof(char));
 
-    if (eingabe)
+    if (eingabe != NULL)
     {
         sprintf(format, "%%%hu[^\n]", maxLen);
         printf("%s", format);
@@ -114,7 +114,7 @@ int getText(char const *prompt, unsigned short maxLen, char **str)
                 {
                     // Für den String wird genau so viel Speicher reserviert, wie nötig ist.
                     *str = calloc(len + 1, sizeof(char));
-                    if (*str)
+                    if (*str != NULL)
                         strcpy(*str, eingabe); // Benutzereingabe in das "zurückzugebende" Argumgent kopieren
                     else
                     {

@@ -121,10 +121,16 @@ int getDateFromString(char const *datum, TDate *date)
     }
 
     if (cTag == NULL || cMonat == NULL || cJahr == NULL)
+    {
+        free(locDate);
         return 0; // Tag, Monat und Jahr müssen im Datum enthalten sein.
+    }
 
     if (anzPunkte != 2)
+    {
+        free(locDate);
         return 0; // Es müssen genau zwei Punkte vorkommen
+    }
 
     // Die Typecast (int -> unsigned short) sollten immer funktionieren,
     // da für Tag, Monat und Jahr eh nur kleine positive Zahlen zulässig sind.
@@ -133,11 +139,15 @@ int getDateFromString(char const *datum, TDate *date)
     tmpDate.year  = atoi(cJahr);    if (errno != 0) return 0;
 
     // Zur Sicherheit
-    assert(tmpDate.day <= 31);
-    assert(tmpDate.month <= 12);
 
     if (isDateValid(&tmpDate) == 0)
+    {
+        free(locDate);
         return 0;
+    }
+
+    assert(tmpDate.day <= 31);
+    assert(tmpDate.month <= 12);
 
     date->day = tmpDate.day;
     date->month = tmpDate.month;
@@ -223,7 +233,7 @@ int getDate(char const *aufforderung, TDate **date)
         if (getDateFromString(eingabe, &tmpDate) == 1)
         {
             *date = malloc(sizeof(TDate));
-            if (*date)
+            if (*date != NULL)
             {
                 (*date)->day = tmpDate.day;
                 (*date)->month = tmpDate.month;
@@ -237,6 +247,7 @@ int getDate(char const *aufforderung, TDate **date)
         }
     }
 
+    free(*date);
     return 0;
 }
 

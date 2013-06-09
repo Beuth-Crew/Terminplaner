@@ -72,6 +72,7 @@ int main()
         case 2: // Bei der Speicherung sind Probleme aufgetreten.
             printf("Warnung: Die Termine wurden möglicherweise nicht richtig gespeichert.\n");
             waitForEnter();
+            break;
 
         default:
             assert(0); // Das darf nicht passieren

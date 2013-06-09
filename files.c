@@ -283,7 +283,7 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
                         else
                         {
                             freeAppointment(&app);
-                            return 0;
+                            return 0; // Speicher konnte nicht reserviert werden
                         }
                     }
                     else
