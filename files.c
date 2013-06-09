@@ -180,7 +180,7 @@ int readIdentifier(FILE *handle, char *str)
 
   Parameter:
     handle - Datei, welche ausgelesen werden soll.
-    appointment - enthält bei Erfolg
+    appointment - enthält bei Erfolg Daten, die gelesen wurden
 
   Returns:
     0 on failure
@@ -504,6 +504,16 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
     return 0; // Nur um den Compiler zu beruhigen
 }
 
+/*
+    Gibt die die Speicherbereiche frei, die von den Elementen des Appointments-Arrays belegt werden.
+*/
+static void freeAppointments(TAppointment *appointments, unsigned short numAppointments)
+{
+    unsigned short i = 0;
+    for (i = 0; i < numAppointments; ++i)
+        freeAppointment(appointments + i);
+}
+
 int loadCalendar(char const *filename)
 {
     unsigned short i; // Zählvariable
@@ -548,7 +558,7 @@ int loadCalendar(char const *filename)
                     if (feof(handle) != 0 || ferror(handle) != 0)
                     {
                         fclose(handle);
-                        free(appointments);
+                        freeAppointments(appointments, numAppointments);
                         return 0; // Fehler oder Ende der Datei. Beides nicht erlaubt.
                     }
 
@@ -556,7 +566,7 @@ int loadCalendar(char const *filename)
                     if (result == 0)
                     {
                         fclose(handle);
-                        free(appointments);
+                        freeAppointments(appointments, numAppointments);
                         return 0; // Fehler beim Einlesen des Appointments
                     }
                 } // for
@@ -567,7 +577,7 @@ int loadCalendar(char const *filename)
                 if (feof(handle) != 0 || ferror(handle) != 0)
                 {
                     fclose(handle);
-                    free(appointments);
+                    freeAppointments(appointments, numAppointments);
                     return 0; // Fehler oder Ende der Datei. Beides nicht erlaubt.
                 }
 
@@ -586,7 +596,7 @@ int loadCalendar(char const *filename)
                     (Calendar + i)->time        = (appointments + i)->time;
                 }
 
-                free(appointments);
+                freeAppointments(appointments, numAppointments);
 
                 // Termine wurden geladen.
                 return 1;
