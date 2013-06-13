@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 static unsigned short const maxLen = 255; // Maximale erlaubte Länge für einen XML-Bezeichner.
 
@@ -152,7 +153,7 @@ int saveCalendar(char const * filename)
   Returns 1 on success
           0 on failure
 */
-int readIdentifier(FILE *handle, char *str)
+static int readIdentifier(FILE *handle, char *str)
 {
     int result;
     char format[70];
@@ -504,9 +505,6 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
     return 0; // Nur um den Compiler zu beruhigen
 }
 
-/*
-    Gibt die die Speicherbereiche frei, die von den Elementen des Appointments-Arrays belegt werden.
-*/
 static void freeAppointments(TAppointment *appointments, unsigned short numAppointments)
 {
     unsigned short i = 0;

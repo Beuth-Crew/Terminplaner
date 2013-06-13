@@ -1,8 +1,6 @@
 #ifndef DATASTRUCTURE_H_INCLUDED
 #define DATASTRUCTURE_H_INCLUDED
 
-#define MAX_APPOINTMENTS 100
-
 typedef enum /* 0 - 6 */
 {
   So = 0, Mo, Di, Mi, Do, Fr, Sa
@@ -31,5 +29,8 @@ typedef struct
     char *location;
 } TAppointment;
 
+#define MAX_APPOINTMENTS 100
+extern unsigned short AppointmentCount;
+extern TAppointment Calendar[MAX_APPOINTMENTS];
 
 #endif // DATASTRUCTURE_H_INCLUDED

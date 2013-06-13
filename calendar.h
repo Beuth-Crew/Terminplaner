@@ -3,6 +3,7 @@
 
 #include "datastructure.h"
 
+
 void createAppointment();
 /******************************************************
  * FUNCTION:                createAppointment
@@ -19,6 +20,8 @@ void createAppointment();
  *           AT:            -
  * CHANGES     :            -
  ******************************************************/
+
+
 
 void editAppointment();
 /******************************************************
@@ -37,6 +40,8 @@ void editAppointment();
  * CHANGES     :            -
  ******************************************************/
 
+
+
 void deleteAppointment();
 /******************************************************
  * FUNCTION:                deleteAppointment
@@ -53,6 +58,8 @@ void deleteAppointment();
  *           AT:            -
  * CHANGES     :            -
  ******************************************************/
+
+
 
 void searchAppointment();
 /******************************************************
@@ -71,6 +78,8 @@ void searchAppointment();
  * CHANGES     :            -
  ******************************************************/
 
+
+
 void sortCalendar();
 /******************************************************
  * FUNCTION:                sortCalendar
@@ -88,7 +97,9 @@ void sortCalendar();
  * CHANGES     :            -
  ******************************************************/
 
- void listCalendar();
+
+
+void listCalendar();
 /******************************************************
  * FUNCTION:                listCalendar
  *-----------------------------------------------------
@@ -105,6 +116,8 @@ void sortCalendar();
  * CHANGES     :            -
  ******************************************************/
 
+
+
 /*
     Befreit den Termin.
  */
@@ -114,5 +127,6 @@ void freeAppointment(TAppointment *appointment);
   Befreiung für den Kalender
 */
 void freeCalendar();
+
 
 #endif // CALENDAR_H_INCLUDED

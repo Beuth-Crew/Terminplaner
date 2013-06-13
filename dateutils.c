@@ -1,71 +1,83 @@
-
 #include "tools.h"
 #include "dateutils.h"
 #include "datastructure.h"
+#include "calendar.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
 
-int isLeapYear(int jahr)
+
+int isLeapYear(int year)
 {
-    if (jahr % 400 == 0)
+
+    if (year % 400 == 0)
         return 1;
-    else if (jahr % 4 == 0 && jahr % 100 != 0)
+    else if (year % 4 == 0 && year % 100 != 0)
         return 1;
     else
         return 0;
+
 }
+
 
 int isDateValid(TDate const *date)
 {
+    // Tag Untergrenze überprüfen
     if (date->day < 1)
         return 0;
 
+    // Jahr überprüfen
     if (date->year < 1582)
         return 0; // Der Gregorianische Kalender geht erst ab dem Jahr 1582 los.
 
+    // Monat überprüfen
     switch (date->month)
     {
-    case 2:
-        if (isLeapYear(date->year) == 1)
+        case 2:
         {
-            if (date->day > 29)
-                return 0;
+            if (isLeapYear(date->year) == 1)
+            {
+                if (date->day > 29)
+                    return 0;
+            }
+            else
+            {
+                if (date->day > 28)
+                    return 0;
+            }
+
+            break;
         }
-        else
+
+        case 1:
+        case 3:
+        case 5:
+        case 7:
+        case 8:
+        case 10:
+        case 12:
         {
-            if (date->day > 28)
+            // Monate mit 31 Tagen
+            if (date->day > 31)
                 return 0;
+
+            break;
         }
 
-        break;
+        case 4:
+        case 6:
+        case 9:
+        case 11:
+            // Monate mit 30 Tagen
+            if (date->day > 30)
+                return 0;
 
-    case 1:
-    case 3:
-    case 5:
-    case 7:
-    case 8:
-    case 10:
-    case 12:
-        // Monate mit 31 Tagen
-        if (date->day > 31)
-            return 0;
-        break;
+            break;
 
-    case 4:
-    case 6:
-    case 9:
-    case 11:
-        // Monate mit 30 Tagen
-        if (date->day > 30)
-            return 0;
-
-        break;
-
-    default:
-        return 0; // Ungültiger Monat
+        default:
+            return 0; // Ungültiger Monat
     }
 
     return 1;
@@ -73,11 +85,14 @@ int isDateValid(TDate const *date)
 
 int getDateFromString(char const *datum, TDate *date)
 {
-    char *cTag = NULL, *cMonat = NULL, *cJahr = NULL; // Tag, Monat, Jahr als Teilstring von datum
-    TDate tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert werden muss.
-    unsigned short anzPunkte = 0; // Es dürfen maximal zwei Punkte vorkommen
-    char *locDate; // lokales Datum ( = datum-Parameter)
-    char *p; // Iterator
+    char *cTag = NULL, *cMonat = NULL, *cJahr = NULL;                       // Tag, Monat, Jahr als Teilstring von datum
+    TDate tmpDate;                                                          // Damit das übergebene Datum im Fehlerfall nicht verändert werden muss.
+    unsigned short anzPunkte = 0;                                           // Es dürfen maximal zwei Punkte vorkommen
+    char *locDate;                                                          // lokales Datum ( = datum-Parameter)
+    char *p;                                                                // Iterator
+
+    assert(date != NULL);
+    assert(datum != NULL);
 
     // Datum kopieren, damit der datum-Parameter nicht verändert werden muss.
     locDate = calloc(strlen(datum) + 1, sizeof(char));
@@ -92,29 +107,29 @@ int getDateFromString(char const *datum, TDate *date)
         if (*p >= '0' && *p <= '9')
         {
             if (cTag == NULL)
-                cTag = p; // Der Tag ist noch nicht gesetzt. Er kommt als erstes.
+                cTag = p;                                                   // Der Tag ist noch nicht gesetzt. Er kommt als erstes.
             else if (cMonat == NULL)
-                cMonat = p; // Der Monat ist noch nicht gesetzt. Er kommt als zweites.
+                cMonat = p;                                                 // Der Monat ist noch nicht gesetzt. Er kommt als zweites.
             else if (cJahr == NULL)
-                cJahr = p; // Das Jahr ist noch nicht gesetzt. Es kommt als letztes.
+                cJahr = p;                                                  // Das Jahr ist noch nicht gesetzt. Es kommt als letztes.
             else
             {
                 free(locDate);
                 return 0;
             }
 
-            while ((*(p + 1) >= '0' && *(p + 1) <= '9') && *(p + 1) != '\0') // Die Zahl bis zum Ende durchlaufen
+            while ((*(p + 1) >= '0' && *(p + 1) <= '9') && *(p + 1) != '\0')// Die Zahl bis zum Ende durchlaufen
                 ++p;
         }
         else if (*p == '.')
         {
             ++anzPunkte;
-            *p = '\0'; // Punkte werden durch \0 ersetzt.
+            *p = '\0';                                                      // Punkte werden durch \0 ersetzt.
         }
         else
         {
             free(locDate);
-            return 0; // Es ist ein ungŸltiges Zeichen enthalten.
+            return 0;                                                       // Es ist ein ungŸltiges Zeichen enthalten.
         }
 
         ++p;
@@ -152,10 +167,12 @@ int getDateFromString(char const *datum, TDate *date)
     date->day = tmpDate.day;
     date->month = tmpDate.month;
     date->year = tmpDate.year;
+    date->dayOfWeek = calculateDayOfWeek(date);
 
     free(locDate);
     return 1;
 }
+
 
 DayOfWeek calculateDayOfWeek(TDate const *date)
 {
@@ -218,11 +235,62 @@ DayOfWeek calculateDayOfWeek(TDate const *date)
            ) % 7;
 }
 
+
+
+int getTimeFromString(char const *UserInput, TTime *time)
+{
+    char* LocalTime;
+    TTime tmpTime;
+    char LocalHours[3];
+    char LocalMinutes[3];
+
+    assert(UserInput != NULL);
+    assert(time != NULL);
+
+    LocalTime = calloc(strlen(UserInput) + 1, sizeof(char));
+    if (LocalTime == NULL)
+        return 0; // Speicher kann nicht reserviert werden.
+
+    strcpy(LocalTime, UserInput);
+
+    LocalHours[0] = LocalTime[0];
+    LocalHours[1] = LocalTime[1];
+    LocalHours[2] = '\0';
+    LocalMinutes[0] = LocalTime[3];
+    LocalMinutes[1] = LocalTime[4];
+    LocalMinutes[2] = '\0';
+
+    free(LocalTime);
+
+    if(LocalHours[0] >= '0' && LocalHours [0] <= '9' /*&& atoi(LocalHours) == 0*/)
+    {
+        tmpTime.hour = atoi(LocalHours);
+        tmpTime.minute = atoi(LocalMinutes);
+
+        if (isTimeValid(&tmpTime) == 0)
+        {
+            time->hour = tmpTime.hour;
+            time->minute = tmpTime.minute;
+            return 1;
+        }
+        else
+            return 0;
+
+        assert(0); // Sollte nie erreicht werden.
+        return 1;
+    }
+    else
+        return 0;
+
+    assert(0); // Sollte nie erreicht werden.
+    return 0;
+}
+
 int getDate(char const *aufforderung, TDate **date)
 {
     char eingabe[12];
     int anzEingelesen; // Anzahl richtig eingelesener Werte
-    TDate tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert wird.
+    TDate * tmpDate; // Damit das übergebene Datum im Fehlerfall nicht verändert wird.
 
     printf("\n%s", aufforderung);
     anzEingelesen = scanf("%11[^\n]", eingabe);
@@ -230,15 +298,19 @@ int getDate(char const *aufforderung, TDate **date)
 
     if (anzEingelesen == 1)
     {
-        if (getDateFromString(eingabe, &tmpDate) == 1)
+        tmpDate = malloc(sizeof(TDate));
+
+        if (getDateFromString(eingabe, tmpDate) == 1)
         {
             *date = malloc(sizeof(TDate));
             if (*date != NULL)
             {
-                (*date)->day = tmpDate.day;
-                (*date)->month = tmpDate.month;
-                (*date)->year = tmpDate.year;
-                (*date)->dayOfWeek = calculateDayOfWeek(*date);
+                (*date)->day        = (*tmpDate).day;
+                (*date)->month      = (*tmpDate).month;
+                (*date)->year       = (*tmpDate).year;
+                (*date)->dayOfWeek  = (*tmpDate).dayOfWeek;
+
+                free(tmpDate);
 
                 return 1; // Everything fine
             }
@@ -247,11 +319,53 @@ int getDate(char const *aufforderung, TDate **date)
         }
     }
 
-    free(*date);
     return 0;
 }
 
-void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
+
+int getTime(char const *Prompt, TTime **Time)
+{
+    char UserInput[7];
+    int ReadSuccessfully;
+    TTime tmpTime;
+
+// Usereingabe
+
+    printf("%s", Prompt);
+    ReadSuccessfully = scanf("%6[^\n]", UserInput);
+    clearBuffer();
+
+// Parsen der Usereingabe in eine gueltige(!) Zeit
+
+    if (ReadSuccessfully)
+    {
+        if (getTimeFromString(UserInput, &tmpTime) == 1)
+        {
+            *Time = malloc(sizeof(TTime));
+            if (*Time)
+            {
+                (*Time)->hour = tmpTime.hour;
+                (*Time)->minute = tmpTime.minute;
+                return 1;
+            }
+            else
+            {
+                return 0; //Speicherplatz konnte nicht reserviert werden!
+            }
+        }
+        else
+        {
+            return 0; // Keine gültige Zeit eingegeben
+        }
+    }
+    else
+        return 0; // Konnte nicht eingelesen werden
+
+    assert(0); // sollte nie erreicht werden
+    return 1;
+}
+
+char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
 {
     switch (dayOfWeek)
     {
@@ -286,22 +400,83 @@ void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm)
         default:
             assert(0); // Das darf nicht passieren!
     }
+
+    return str;
 }
 
-// todo implementieren
+void printTime(TTime const *time)
+{
+    if(time)
+    {
+        printf("%02hu", time->hour);
+        printf(":");
+        printf("%02hu", time->minute);
+    }
+    else
+    {
+        printf("     ");
+    }
+}
+
+void printDate(TDate const *date)
+{
+    char weekStr[11];
+
+    assert(date != NULL);
+
+    printf("%s", weekDayToStr(weekStr, date->dayOfWeek, 0));
+    printf(", der ");
+    printf("%02hu", date->day);
+    printf(".");
+    printf("%02hu", date->month);
+    printf(".");
+    printf("%04hu", date->year);
+    printf(":\n");
+}
+
+void printAppointment(TAppointment const *Appointment, int DoPrintDate)
+{
+// Ausgabe des Datum wenn DoPrintDate != 0
+    if(DoPrintDate)
+    {
+        assert(Appointment->date);
+        //printf("------------------------------------------------------------------------------------\n");
+        printDate(Appointment->date);
+        printf("------------------------------\n");
+    }
+
+    printf("   ");
+    printTime(Appointment->time);
+
+
+    printf(" -> ");
+
+    if(Appointment->location)
+    {
+        printf("%-15.15s |", Appointment->location);
+    }else
+    {
+        printf("                |");
+    }
+
+    if(Appointment->description)
+    {
+        if(strlen(Appointment->description) > 50)
+        {
+            printf("%-50.50s...", Appointment->description);
+        }else
+        {
+            printf("%-50s", Appointment->description);
+        }
+    }
+    printf("\n");
+}
+
 int isTimeValid(TTime const *time)
 {
+    if(time->hour > 23 || time->minute > 60)
+        return 0;
+
     return 1;
 }
 
-// todo implementieren
-void printTime(TTime const *time)
-{
-
-}
-
-// todo implementieren
-void printDate(TDate const *date)
-{
-
-}

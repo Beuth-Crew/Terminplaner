@@ -1,3 +1,4 @@
+
 #include "menu.h"
 #include "tools.h"
 #include <stdio.h>
@@ -21,7 +22,6 @@ unsigned short menu(char const *title, char const **menuPoints, unsigned short n
         printf("%s\n", title);
         printLine('=', strlen(title));
         printf("\n");
-
 
         for (i = 0; i < numMenuPoints; ++i)
             printf("%2u. %s\n", i + 1, menuPoints[i]);

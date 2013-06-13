@@ -24,8 +24,10 @@ int isLeapYear(int jahr);
  * CHANGES     :            -
  ******************************************************/
 
+
 // todo is noch nicht implementiert.
 int isTimeValid(TTime const *time);
+
 
 int isDateValid(TDate const *date);
 /******************************************************
@@ -47,6 +49,7 @@ int isDateValid(TDate const *date);
  * CHANGES     :            -
  ******************************************************/
 
+
 int getDateFromString(char const *datum, TDate *date);
 /******************************************************
  * FUNCTION:                getDateFromString
@@ -65,7 +68,25 @@ int getDateFromString(char const *datum, TDate *date);
  * CHANGES     :            -
  ******************************************************/
 
-DayOfWeek calculateDayOfWeek(TDate const *date);
+
+ int getTimeFromString(char const *UserInput, TTime *time);
+/******************************************************
+ * FUNCTION:                getTimeFromString
+ *-----------------------------------------------------
+ * DESCRIPTION:             Parst eine Uhrzeit aus einer Zeichenkette.
+ * FIELD OF APPLICATION:    Local
+ * PARAMETER:               char const *Time1
+ *                          TTime *Time2
+ * TYP OF RESULT:           int
+ * VALUE OF RESULT:
+ *   -> NORMAL CASE:        1 (Uhrzeit richtig geparst & Uhrzeit existiert)
+ *   -> FAULT  CASE:        0 (Uhrzeit konnte nicht geparst werden oder Uhrzeit existiert nicht)
+ *-----------------------------------------------------
+ * DEVELOPED BY:            Martin Ortel
+ *           AT:            2013-05-07
+ * CHANGES     :            -
+ ******************************************************/
+
 
 int getDate(char const *prompt, TDate **date);
 /******************************************************
@@ -88,14 +109,32 @@ int getDate(char const *prompt, TDate **date);
  * CHANGES     :            -
  ******************************************************/
 
-/*
-  getTime
-  todo implementieren
-*/
-int getTime(const char *prompt, TTime **time)
-{
-    return 0;
-}
+
+
+
+
+ int getTime(char const *prompt, TTime **Time);  //-- WORK IN PROGRESS --
+/******************************************************
+ * FUNCTION:                getTime
+ *-----------------------------------------------------
+ * DESCRIPTION:             Gibt die Uebergebene Zeichenkette auf dem
+ *                          Bildschirm aus und liest dann eine Uhrzeit
+ *                          vom Benutzer ein.
+ * FIELD OF APPLICATION:    Local
+ * PARAMETER:               char const *prompt
+ *                          Time - enthält im falle einer korrekten
+ *                          Benutzereingabe das eingegebene Datum.
+ * TYP OF RESULT:           int
+ * VALUE OF RESULT:
+ *   -> NORMAL CASE:        1 (Datum richtig geparst & Datum existiert)
+ *   -> FAULT CASE:         0 (Datum konnte nicht geparst werden)
+ *-----------------------------------------------------
+ * DEVELOPED BY:            Martin Ortel
+ *           AT:            2013-05-07
+ * CHANGES     :            -
+ ******************************************************/
+
+DayOfWeek calculateDayOfWeek(TDate const *date);
 
 /*
     Rückgabe:
@@ -111,7 +150,11 @@ int getTime(const char *prompt, TTime **time)
                         1 - bedeutet, dass kurze Bezeichnungen zurückgegeben werden,
                             also z.B. "Mo" anstatt "Montag"
 */
-void weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
+char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
+
+void printAppointment();
+
+int compareIntegers(int Integer1, int Integer2);
 
 
 void printTime(TTime const *time);
