@@ -18,7 +18,7 @@ Hab drübergeguckt. Die printLine-Funktion hast du nich getestet, wie ich sehe :
 
 Übung 3 Aufgabenverteilung:
 Fabi	createAppointment listCalendar freeCalendar
-Mrtn	getDate getTime printTime printDate 
-Sven	getText getDate freeAppointment
+Mrtn	getDate getTime printTime printDate
+Sven	getText	getDate freeAppointment
 
 

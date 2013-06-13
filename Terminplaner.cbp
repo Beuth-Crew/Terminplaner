@@ -34,6 +34,7 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="OS.h" />
+		<Unit filename="README" />
 		<Unit filename="animation.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -41,6 +42,7 @@
 		<Unit filename="calendar.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="calendar.db" />
 		<Unit filename="calendar.h" />
 		<Unit filename="datastructure.h" />
 		<Unit filename="dateutils.c">

@@ -9,7 +9,7 @@
 
 int main()
 {
-    char const *dbFile = "calendar.txt";
+    char const *dbFile = "calendar.db";
     unsigned short i; // Zählvariable
     int selection; // Menüauswahl
     char const * const title = "Terminverwaltung V 0.02";
@@ -70,7 +70,7 @@ int main()
             break;
 
         case 2: // Bei der Speicherung sind Probleme aufgetreten.
-            printf("Warnung: Die Termine wurden möglicherweise nicht richtig gespeichert.\n");
+            printf("Warnung: Die Termine wurden moeglicherweise nicht richtig gespeichert.\n");
             waitForEnter();
             break;
 
