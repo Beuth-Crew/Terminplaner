@@ -113,5 +113,7 @@ void waitForEnter();
 */
 int getText(char const *prompt, unsigned short maxLen, char **str);
 
+int askPolarQuestion(char * Prompt);
+
 #endif
 

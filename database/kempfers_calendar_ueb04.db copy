@@ -1,0 +1,34 @@
+<Calendar>
+ <AppointmentCount>5</AppointmentCount>
+ <Appointment>
+  <Date>10.05.2013</Date>
+  <Description>Ausschlafen</Description>
+ </Appointment>
+ <Appointment>
+  <Date>17.05.2013</Date>
+  <Description>IN2 Uebung Gruppe 1</Description>
+  <Location>D 113</Location>
+  <Time>08:00</Time>
+  <Duration>01:30</Duration>
+ </Appointment>
+ <Appointment>
+  <Date>17.05.2013</Date>
+  <Time>10:00</Time>
+  <Location>H5</Location>
+  <Duration>01:30</Duration>
+  <Description>IN2 Vorlesung</Description>
+ </Appointment>
+ <Appointment>
+  <Time>12:15</Time>
+  <Description>IN2 Uebung Gruppe 2</Description>
+  <Location>D 113</Location>
+  <Duration>01:30</Duration>
+  <Date>17.05.2013</Date>
+ </Appointment>
+ <Appointment>
+  <Time>18:00</Time>
+  <Description>Party</Description>
+  <Duration>10:00</Duration>
+  <Date>18.05.2013</Date>
+ </Appointment>
+</Calendar>

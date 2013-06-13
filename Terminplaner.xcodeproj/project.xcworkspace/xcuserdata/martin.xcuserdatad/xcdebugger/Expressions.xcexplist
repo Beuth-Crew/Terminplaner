@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "GLOBAL">
+         <PersistentStrings>
+            <PersistentString
+               value = "Calendar[i]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "getTimeFromString:dateutils.c">
+      </ContextState>
+      <ContextState
+         contextName = "readFilesAtStartup:calendar.c">
+      </ContextState>
+      <ContextState
+         contextName = "main:ueb4.c">
+      </ContextState>
+      <ContextState
+         contextName = "checkForCharacteristic:files.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "*(CurrentLineAsString+i)">
+            </PersistentString>
+            <PersistentString
+               value = "*(Characteristic+j)">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "loadCalendar:files.c">
+      </ContextState>
+      <ContextState
+         contextName = "loadAppointment:files.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "Calendar[*AppointmentCount]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "printAppointment:dateutils.c">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

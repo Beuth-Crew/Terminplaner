@@ -1,11 +1,10 @@
-
 #include "menu.h"
 #include "tools.h"
 #include <stdio.h>
 #include <assert.h>
 #include <string.h>
 
-unsigned short Menu(char const *title, char const **menuPoints, unsigned short numMenuPoints)
+unsigned short menu(char const *title, char const **menuPoints, unsigned short numMenuPoints)
 {
     unsigned short i; // Zählvariable
     unsigned short input; // Benutzereingabe
@@ -25,7 +24,7 @@ unsigned short Menu(char const *title, char const **menuPoints, unsigned short n
 
 
         for (i = 0; i < numMenuPoints; ++i)
-            printf("%2hu. %s\n", i + 1, menuPoints[i]);
+            printf("%2u. %s\n", i + 1, menuPoints[i]);
 
         printf("\nIhre Wahl: ");
         scanfRet = scanf("%hu", &input);
