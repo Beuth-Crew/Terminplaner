@@ -236,7 +236,6 @@ DayOfWeek calculateDayOfWeek(TDate const *date)
 }
 
 
-
 int getTimeFromString(char const *UserInput, TTime *time)
 {
     char* LocalTime;
@@ -267,7 +266,7 @@ int getTimeFromString(char const *UserInput, TTime *time)
         tmpTime.hour = atoi(LocalHours);
         tmpTime.minute = atoi(LocalMinutes);
 
-        if (isTimeValid(&tmpTime) == 0)
+        if (isTimeValid(&tmpTime) == 1)
         {
             time->hour = tmpTime.hour;
             time->minute = tmpTime.minute;
@@ -406,77 +405,263 @@ char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm
 
 void printTime(TTime const *time)
 {
-    if(time)
-    {
-        printf("%02hu", time->hour);
-        printf(":");
-        printf("%02hu", time->minute);
-    }
-    else
-    {
-        printf("     ");
-    }
+    assert(time);
+    printf("%02hu:%02hu", time->hour, time->minute);
 }
 
-void printDate(TDate const *date)
+unsigned short printDate(TDate const *date)
 {
     char weekStr[11];
 
-    assert(date != NULL);
+    assert(date);
 
-    printf("%s", weekDayToStr(weekStr, date->dayOfWeek, 0));
-    printf(", der ");
-    printf("%02hu", date->day);
-    printf(".");
-    printf("%02hu", date->month);
-    printf(".");
-    printf("%04hu", date->year);
-    printf(":\n");
+    return printf("%s, der %02hu.%02hu.%04hu:\n", weekDayToStr(weekStr, date->dayOfWeek, 0),
+                  date->day,
+                  date->month,
+                  date->year);
 }
 
-void printAppointment(TAppointment const *Appointment, int DoPrintDate)
+void printAppointment(TAppointment const *app)
 {
-// Ausgabe des Datum wenn DoPrintDate != 0
-    if(DoPrintDate)
+    TTime endTime; // Endzeitpunkt, wird errechnet mittels addTime(...)
+
+    assert(app);
+    assert(app->date);
+    assert(app->description);
+
+    if (app->time)
+        printTime(app->time);
+    else
+        printf("     "); // Platzhalter
+
+    printf(" - "); // optischer Trenner
+
+    addTime(app->time, app->duration, &endTime);
+    printTime(&endTime);
+
+    printf(" -> "); // optischer Trenner
+
+    if(app->location)
+        printf("%-15s", app->location);
+    else
+        printf("               "); // Platzhalter
+
+    printf(" | "); // optischer Trenner
+
+    if(app->description)
     {
-        assert(Appointment->date);
-        //printf("------------------------------------------------------------------------------------\n");
-        printDate(Appointment->date);
-        printf("------------------------------\n");
+        printf("%-39s", app->description);
+        if(strlen(app->description) > 39)
+            printf("...");
     }
 
-    printf("   ");
-    printTime(Appointment->time);
-
-
-    printf(" -> ");
-
-    if(Appointment->location)
-    {
-        printf("%-15.15s |", Appointment->location);
-    }else
-    {
-        printf("                |");
-    }
-
-    if(Appointment->description)
-    {
-        if(strlen(Appointment->description) > 50)
-        {
-            printf("%-50.50s...", Appointment->description);
-        }else
-        {
-            printf("%-50s", Appointment->description);
-        }
-    }
     printf("\n");
 }
 
 int isTimeValid(TTime const *time)
 {
+    assert(time);
+
     if(time->hour > 23 || time->minute > 60)
         return 0;
 
     return 1;
 }
 
+
+unsigned short addTime(TTime const *time1, TTime const *time2, TTime *result)
+{
+    assert(result);
+
+    if (time1 == NULL)
+    {
+        if (time2 == NULL)
+            result->hour = result->minute = 0;
+        else
+        {
+            result->hour   = time2->hour;
+            result->minute = time2->minute;
+        }
+    }
+    else
+    {
+        if (time2 == NULL)
+        {
+            result->hour   = time1->hour;
+            result->minute = time1->minute;
+        }
+        else
+        {
+            // Die beiden Zeiten zusammenrechnen
+            result->minute = time1->minute + time2->minute;
+            result->hour   = time1->hour   + time2->hour;
+            if (result->minute > 59)
+            {
+                // Übertrag auf die Stunden
+                ++result->hour;
+                result->minute -= 60;
+            }
+
+            if (result->hour >= 24)
+            {
+                result->hour -= 24;
+                return 1; // Ergebnis geht über 24h hinaus.
+            }
+        }
+    }
+
+    return 0; // Ergebnis hat die 24h-Grenze nicht überschritten.
+}
+
+void swapAppointments(TAppointment *a1, TAppointment *a2)
+{
+    TDate *tmpDate;
+    TTime *tmpTime;
+    char *tmpStr;
+
+    assert(a1);
+    assert(a2);
+
+    tmpDate = a1->date;
+    a1->date = a2->date;
+    a2->date = tmpDate;
+
+    tmpTime = a1->time;
+    a1->time = a2->time;
+    a2->time = tmpTime;
+
+    tmpTime = a1->duration;
+    a1->duration = a2->duration;
+    a2->duration = tmpTime;
+
+    tmpStr = a1->description;
+    a1->description = a2->description;
+    a2->description = tmpStr;
+
+    tmpStr = a1->location;
+    a1->location = a2->location;
+    a2->location = tmpStr;
+}
+
+short cmpDates(TDate const *d1, TDate const *d2)
+{
+    short diffMonths;
+    short diffYears;
+
+    assert(d1);
+    assert(d2);
+
+    diffYears = d1->year - d2->year;
+    if (diffYears == 0)
+    {
+        // Jahre sind gleich
+        diffMonths = d1->month - d2->month;
+        if (diffMonths == 0)
+            return d1->day - d2->day; // Jahr und Monate sind gleich, vergleiche Tage.
+        else
+            return diffMonths; // Monate sind unterschiedlich
+    }
+
+    return diffYears; // Jahre sind unterschiedlich
+}
+
+short cmpTimes(TTime const *t1, TTime const *t2)
+{
+    short diffHours;
+
+    if (t1 == NULL)
+    {
+        if (t2 == NULL)
+            return 0;
+        else
+            return -t2->hour;
+    }
+    else
+    {
+        if (t2 == NULL)
+            return t1->hour;
+        else
+            diffHours = t1->hour - t2->hour;
+    }
+
+    // An dieser Stelle sollte keiner der beiden TTime-Zeiger NULL sein.
+    if (diffHours == 0)
+        return t1->minute - t2->minute; // Stunden sind gleich, vergleiche Minuten.
+
+    return diffHours; // Stunden sind unterschiedlich
+}
+
+short cmpApps_DateTime(TAppointment const *a1, TAppointment const *a2)
+{
+    short diffDates;
+
+    assert(a1);
+    assert(a2);
+
+    diffDates = cmpDates(a1->date, a2->date);
+
+    if (diffDates == 0)
+        return cmpTimes(a1->time, a2->time); // Datum ist gleich, vergleiche Zeit
+
+    return diffDates;
+}
+
+short cmpApps_DurDateTime(TAppointment const *a1, TAppointment const *a2)
+{
+    short diffDurations;
+
+    assert(a1);
+    assert(a2);
+
+    diffDurations = cmpTimes(a1->duration, a2->duration);
+
+    if (diffDurations == 0)
+        return cmpApps_DateTime(a1, a2); // Dauer ist gleich, vergleiche Datum und Zeit
+
+    return diffDurations;
+}
+
+short cmpApps_DescDateTime(TAppointment const *a1, TAppointment const *a2)
+{
+    short diffDescs;
+
+    assert(a1);
+    assert(a2);
+    assert(a1->description);
+    assert(a2->description);
+
+    diffDescs = stricmp(a1->description, a2->description); // Vergleiche Beschreibungsn, case insensitive
+
+    if (diffDescs == 0)
+        return cmpApps_DateTime(a1, a2); // Beschreibungen sind gleich, vergleiche Datum und Zeit
+
+    return diffDescs;
+}
+
+short cmpApps_LocDateTime(TAppointment const *a1, TAppointment const *a2)
+{
+    short diffLocations;
+
+    assert(a1);
+    assert(a2);
+
+    if (a1->location == NULL)
+    {
+        if (a2->location == NULL)
+            diffLocations = 0;
+        else
+            diffLocations = -(*(a2->location));
+    }
+    else
+    {
+        if (a2->location == NULL)
+            diffLocations = *(a1->location);
+        else
+            diffLocations = stricmp(a1->location, a2->location); // Vergleiche Orte, case insensitive
+    }
+
+    if (diffLocations == 0)
+        return cmpApps_DateTime(a1, a2); // Orte sind gleich, vergleiche Datum und Zeit
+
+    return diffLocations;
+}

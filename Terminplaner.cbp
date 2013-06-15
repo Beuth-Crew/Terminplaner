@@ -57,6 +57,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="menu.h" />
+		<Unit filename="sort.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="sort.h" />
 		<Unit filename="tools.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -68,6 +72,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="ueb4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="ueb5.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

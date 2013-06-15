@@ -1,6 +1,8 @@
 #ifndef TOOLS_H
 #define TOOLS_H
 
+#include <stdlib.h>
+
 #define SAFE_FREE(x) { free((x)); (x) = NULL; }
 
 void clearScreen();
@@ -110,8 +112,10 @@ void waitForEnter();
         maxLen              maximale Zeichenanzahl der Benutzereingabe.
         str                 Zeiger auf eine Zeichenkette (Zeiger auf ein char-Zeiger),
                             enthält nach erfolgreicher Funktion die Benutzereingabe
+        allowEmptyText      0 - bedeutet, dass leere Eingaben nicht akzeptiert werden.
+                            andere Werte - bedeuten, dass leere Eingaben zulässig sind.
 */
-int getText(char const *prompt, unsigned short maxLen, char **str);
+int getText(char const *prompt, unsigned short maxLen, char **str, unsigned short allowEmptyText);
 
 int askPolarQuestion(char * Prompt);
 

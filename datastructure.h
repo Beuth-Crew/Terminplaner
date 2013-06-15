@@ -29,8 +29,4 @@ typedef struct
     char *location;
 } TAppointment;
 
-#define MAX_APPOINTMENTS 100
-extern unsigned short AppointmentCount;
-extern TAppointment Calendar[MAX_APPOINTMENTS];
-
 #endif // DATASTRUCTURE_H_INCLUDED

@@ -10,10 +10,56 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include "sort.h"
 
 // Globale Variablen (pfui)
 unsigned short AppointmentCount = 0;
 TAppointment Calendar[MAX_APPOINTMENTS];
+
+void addAppToCalendar(TAppointment *const app)
+{
+    TAppointment *newApp = Calendar + AppointmentCount;
+
+    assert(app);
+    assert(app->date);
+    assert(app->description);
+
+    newApp->date        = app->date;
+    newApp->description = app->description;
+
+    if (app->duration != NULL) newApp->duration    = app->duration;
+    if (app->location != NULL) newApp->location    = app->location;
+    if (app->time != NULL)     newApp->time        = app->time;
+
+    ++AppointmentCount;
+
+    // Kalender neu sortieren mit dem neuen Element
+    switch (sortierung)
+    {
+        case Sort_DateTime:
+            quickSortCalendar(cmpApps_DateTime);
+            break;
+
+        case Sort_DescDateTime:
+            quickSortCalendar(cmpApps_DescDateTime);
+            break;
+
+        case Sort_DurDateTime:
+            quickSortCalendar(cmpApps_DurDateTime);
+            break;
+
+        case Sort_LocDateTime:
+            quickSortCalendar(cmpApps_LocDateTime);
+            break;
+
+        case Sort_None:
+            // Nichts sortieren
+            break;
+
+        default:
+            assert(0);
+    }
+}
 
 void createAppointment()
 {
@@ -26,7 +72,7 @@ void createAppointment()
     char const *LocationPrompt       = "Ort           :";
     char const *DurationPrompt       = "Dauer         :";
 
-    int j = 0;
+    int j;
 
 
 // prompt of title
@@ -55,9 +101,11 @@ void createAppointment()
 
 // read in description
 
-    while(j != 1)
+    do
     {
-        switch(getText(DescriptionPrompt, 100, &TmpAppointment.description))
+        j = getText(DescriptionPrompt, 100, &TmpAppointment.description, 0);
+        /*
+        switch(getText(DescriptionPrompt, 100, &TmpAppointment.description, 0))
         {
             case 0:
                 j = 0;
@@ -75,23 +123,25 @@ void createAppointment()
             default:
                 assert(0);
         }
-    }
-
-    j = 0;
+        */
+    } while(j != 1);
 
 
 // read in location
 
-    while(j != 1)
+    do
     {
-        switch(getText(LocationPrompt, 15, &TmpAppointment.location))
+        j = getText(LocationPrompt, 15, &TmpAppointment.location, 1);
+        /*
+        switch(getText(LocationPrompt, 15, &TmpAppointment.location, 1))
         {
             case 0:
                 j = 0;
                 printf("Ungueltige Eingabe.");
                 break;
 
-            case 1: j = askPolarQuestion("Sie haben keineb Ort eingegeben.\nMoechten Sie dieses Feld frei lassen(Ja) oder die Eingabe wiederholen(Nein)?");
+            case 1:
+                j = 1;
                 break;
 
             // case 3: j = 0;  printf("Ihre Eingabe ist zu lang.\nBitte beschraenken Sie sich auf 15 Zeichen.");
@@ -100,7 +150,8 @@ void createAppointment()
             default:
                 assert(0);
         }
-    }
+        */
+    } while(j != 1);
 
 
 // read in duration
@@ -114,18 +165,12 @@ void createAppointment()
 
 // hand over tempAppointment to Calendar-Array
 
-    Calendar[AppointmentCount] = TmpAppointment;
-
-
-// increase the AppointmentCount by one
-
-    ++AppointmentCount;
+    addAppToCalendar(&TmpAppointment);
 
     printf("\nTermin wurde gespeichert!");
 
     waitForEnter();
 }
-
 
 
 void editAppointment()
@@ -138,11 +183,10 @@ void editAppointment()
 
 void deleteAppointment()
 {
-	++AppointmentCount;
-	printf("Termin geloescht\n\n");
+	//--AppointmentCount;
+	printf("deleteAppointment()\n\n");
     waitForEnter();
 }
-
 
 
 void searchAppointment()
@@ -152,126 +196,143 @@ void searchAppointment()
 }
 
 
-
 void sortCalendar()
 {
-    int MenuSelection;
-    char const * const MenuTitle = "Sortieren  Ver. 0.0.1";
+    int selection;
+    char const * const title = "Sortieren  Ver. 0.0.1";
+    unsigned short weiter = 1;
 
-    unsigned short const nOfMenuPoints = 9;
-    char const * MenuOptions[nOfMenuPoints];
-    MenuOptions[0] = "Kalender aufwaerts nach Datum und Uhrzeit sortieren";
-    MenuOptions[1] = "Kalender abwaerts nach Datum und Uhrzeit sortieren";
-    MenuOptions[2] = "Kalender aufwaerts nach Beschreibung, Datum und Uhrzeit sortieren";
-    MenuOptions[3] = "Kalender abwaerts nach Beschreibung, Datum und Uhrzeit sortieren";
-    MenuOptions[4] = "Kalender aufwaerts nach Ort, Datum und Uhrzeit sortieren";
-    MenuOptions[5] = "Kalender abwaerts nach Ort, Datum und Uhrzeit sortieren";
-    MenuOptions[6] = "Kalender aufwaerts nach Dauer, Datum und Uhrzeit sortieren";
-    MenuOptions[7] = "Kalender abwaerts nach Dauer, Datum und Uhrzeit sortieren";
-    MenuOptions[8] = "zurueck zum Hauptmenue";
-
-
-    // Ausgabe des Sortiermenus
+    unsigned short const numOptions = 5;
+    char const * options[numOptions];
+    options[0] = "Nach Datum und Uhrzeit sortieren";
+    options[1] = "Nach Dauer, Datum und Uhrzeit sortieren";
+    options[2] = "Nach Beschreibung, Datum und Uhrzeit sortieren";
+    options[3] = "Nach Ort, Datum und Uhrzeit sortieren";
+    options[4] = "Zurueck zum Hauptmenue";
 
     do
     {
-        MenuSelection = menu(MenuTitle, MenuOptions, nOfMenuPoints);
-
+        selection = menu(title, options, numOptions);
 
         // Aufrufen der ausgewaehlten Funktion
-
-        /*
-        switch(MenuSelection)
+        switch (selection)
         {
-            case 1: createAppointment(Calendar, &AppointmentCount);                     break;
-            case 2: editAppointment(Calendar, &AppointmentCount);                       break;
-            case 3: deleteAppointment(Calendar, &AppointmentCount);                     break;
-            case 4: searchAppointment(Calendar, AppointmentCount);                      break;
-            case 5: sortCalendar(Calendar, AppointmentCount);                           break;
-            case 6: listCalendar(Calendar, AppointmentCount);                           break;
-            case 7: quitCalendar(Calendar, AppointmentCount);                           break;
-            case 8:                                                                     break;
+            case 1:
+                quickSortCalendar(cmpApps_DateTime);
+                weiter = 0;
+                break;
 
+            case 2:
+                quickSortCalendar(cmpApps_DurDateTime);
+                weiter = 0;
+                break;
+
+            case 3:
+                quickSortCalendar(cmpApps_DescDateTime);
+                weiter = 0;
+                break;
+
+            case 4:
+                quickSortCalendar(cmpApps_LocDateTime);
+                weiter = 0;
+                break;
+
+            case 5:
+                return; // Nichts sortieren
+
+            default:
+                printf("Ungueltige Auswahl.\n");
         }
-         */
+    } while (weiter != 0);
 
-    } while(MenuSelection != 9);
-
-
-
-    printf("sortCalendar()\n\n");
     waitForEnter();
 }
 
 
 void listCalendar()
-
 {
-    unsigned short i;
-    char const * Headline = "Liste der Termine";
-    int DoPrintDate;
+    unsigned short const lineLen = 79; // Länge einer Zeile, bestimmt Strichlänge
+    char const *headline = "Termine";
+    unsigned short ugApp; // Untergrenze einer Gruppe von Terminen. ugApp ist ein Index im Calendar-Array.
+    unsigned short curApp; // Index, bei welchem Termin wir gerade sind. Für Iteration
+    unsigned short numAppsPrinted = 0; // Wird zum Zählen verwendet. Nach je 15 Terminen wird waitForEnter() aufgerufen.
+    unsigned short dateLen; // Zeichenlänge des ausgegebenen Datums, wird benötigt, um die Linie unter dem Datum genauso lang zu machen.
 
-// Ausgabe der Ueberschrift
-    if(AppointmentCount)
+    clearScreen();
+    printf("%s\n", headline);
+    printLine('=', strlen(headline));
+
+    switch (sortierung)
     {
-        printf("%s", Headline);
-        printf("\n");
-        printLine('=', strlen(Headline));
-        printf("\n");
-    }else
-    {
-        printf("Es wurden noch keine Termine angelegt.");
+        case Sort_DateTime:
+            printf("Sortiert nach Datum -> Uhrzeit\n");
+            break;
+
+        case Sort_DurDateTime:
+            printf("Sortiert nach Dauer -> Datum -> Uhrzeit\n");
+            break;
+
+        case Sort_LocDateTime:
+            printf("Sortiert nach Ort -> Datum -> Uhrzeit\n");
+            break;
+
+        case Sort_DescDateTime:
+            printf("Sortiert nach Beschreibung -> Datum -> Uhrzeit\n");
+            break;
+
+        case Sort_None:
+            // Nichts ausgeben
+            break;
+
+        default:
+            assert(0);
     }
 
-// Ueberpruefung ob der letzde Termin am gleichen Tag ist wie der aktuelle Termin
-// und setzt die Uebergabevariable fuer printAppointment: 0 ^= Datum nicht ausgeben
-
-    for(i = 0; i < AppointmentCount; i++)
+    curApp = ugApp = 0; // Wir fangen beim 0. Element an.
+    while (ugApp < AppointmentCount)
     {
-        if(i)
+        // Ausgabe des Datums
+        printf("\n");
+        printLine('-', lineLen); // Diese Zeile trennt die einzelnen Daten voneinander
+
+        dateLen = printDate((Calendar + ugApp)->date);
+        printLine('-', dateLen); // Unterstreichung für das Datum
+
+        // Daten ausgeben, die zur Datumsgruppe gehören (bei 15 wird gestoppt)
+        while (curApp < AppointmentCount)
         {
-            if(compareIntegers(Calendar[i-1].date->day, Calendar[i].date->day) == 0)
+            // Wurden bereits 15 Termine ausgegeben?
+            if (numAppsPrinted >= 15)
             {
-                if(compareIntegers(Calendar[i-1].date->month, Calendar[i].date->month) == 0)
-                {
-                    if(compareIntegers(Calendar[i-1].date->year, Calendar[i].date->year) == 0)
-                    {
-                        DoPrintDate = 0;
-                    }else
-                    {
-                        DoPrintDate = 1;
-                    }
-                }else
-                {
-                    DoPrintDate = 1;
-                }
-            }else
-            {
-                DoPrintDate = 1;
+                numAppsPrinted = 0; // Auf 0 zurücksetzen, damit der Zähler wieder bis 15 gehen kann.
+                waitForEnter();
+                break; // Die Gruppierung wird hiermit beendet.
             }
-        }else
-        {
-            DoPrintDate = 1;
+
+            if ( cmpDates((Calendar + ugApp)->date, (Calendar + curApp)->date) != 0 )
+                break; // Daten sind nicht gleich
+
+            // Termin ausgeben
+            printf("   "); // Einrückung
+            printAppointment(Calendar + curApp);
+
+            ++numAppsPrinted;
+            ++curApp;
         }
 
-        if(DoPrintDate) printf("------------------------------------------------------------------------------------\n");
-
-        printAppointment(Calendar[i], DoPrintDate);
-
-
+        ugApp = curApp;
     }
 
-    printf("------------------------------------------------------------------------------------\n");
-
+    printLine('-', lineLen);
     waitForEnter();
 }
 
 
 void freeAppointment(TAppointment *appointment)
 {
+    SAFE_FREE(appointment->date);
     SAFE_FREE(appointment->time);
     SAFE_FREE(appointment->description);
-    SAFE_FREE(appointment->date);
     SAFE_FREE(appointment->duration);
     SAFE_FREE(appointment->location);
 }

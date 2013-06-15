@@ -6,10 +6,13 @@
 #include <string.h>
 #include "datastructure.h"
 #include "calendar.h"
+//#include <errno.h>
 
+#ifdef _LINUX_OSX_
 #include <termios.h>
 #include <unistd.h>
-#include <errno.h>
+#endif
+
 
 /*
     Statische Funktion, die einen Fehlertext in der Konsole ausgibt.
@@ -97,32 +100,35 @@ void printLine(char printChar, int lineLength)
     printf("\n");
 }
 
-int getText(char const *prompt, unsigned short maxLen, char **str)
+int getText(char const *prompt, unsigned short maxLen, char **str, unsigned short allowEmptyText)
 {
     char format[20]; // Inhalt sieht nachher beispielsweise so aus (bei maxLen = 15): "%15[^\n]"
     int scanRet;
+    int weiter = 1; // Schleife wird solange ausgeführt, bis weiter = 0 ist.
     int len; // Länge der vom Benutzer eingegebenen Zeichenkette
     char *UserInput = calloc(maxLen + 1, sizeof(char));
 
-    if (UserInput)
+    if (UserInput != NULL)
     {
         sprintf(format, "%%%hu[^\n]", maxLen);
         do
         {
             printf("%s", prompt);
             scanRet = scanf(format, UserInput);
-
             clearBuffer(); // Notwendig?
+
+            len = strlen(UserInput);
             if (scanRet == 1)
             {
-                len = strlen(UserInput);
                 if (len > 0)
                 {
                     // Für den String wird genau so viel Speicher reserviert, wie nötig ist.
                     *str = calloc(len + 1, sizeof(char));
-
                     if (*str != NULL)
+                    {
+                        weiter = 0; // Schleife verlassen
                         strcpy(*str, UserInput); // Benutzereingabe in das "zurückzugebende" Argumgent kopieren
+                    }
                     else
                     {
                         free(UserInput);
@@ -130,9 +136,21 @@ int getText(char const *prompt, unsigned short maxLen, char **str)
                     }
                 }
                 else
-                    scanRet = 0; // Der Benutzer hat nur die Eingabetaste gedrückt.
+                {
+                    // Der Benutzer hat nur die Eingabetaste gedrückt.
+                    if (allowEmptyText != 0)
+                        weiter = 0; // emptyness is allowed. break loop
+                }
             }
-        } while (scanRet != 1);
+            else
+            {
+                if (len == 0 && allowEmptyText != 0)
+                {
+                    weiter = 0; // emptyness is allowed. break loop
+                    *str = NULL; // Ist gültig, da dieser Punkt nur erreicht werden kann, wenn allowEmptyText = 1 ist.
+                }
+            }
+        } while (weiter != 0);
     }
     else
         return 0; // Speicher konnte nicht reserviert werden
@@ -183,9 +201,4 @@ int askPolarQuestion(char * Prompt)
 
    // Wird nie erreicht:
    return 0; // Nur um den Compiler zu beruhigen
-}
-
-int compareIntegers(int Integer1, int Integer2)
-{
-    return Integer1-Integer2;
 }

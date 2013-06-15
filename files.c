@@ -6,6 +6,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "tools.h"
 
 static unsigned short const maxLen = 255; // Maximale erlaubte Länge für einen XML-Bezeichner.
 
@@ -273,6 +274,8 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
                                 return 0; // Fehler oder Ende der Datei. Beides nicht erlaubt.
                             }
 
+                            app.date->dayOfWeek = calculateDayOfWeek(app.date);
+
                             // Das einzige erlaubte Tag ist hier </Date>
                             result = fscanf(handle, " < / Date >");
                             if (feof(handle) != 0 || ferror(handle) != 0)
@@ -302,10 +305,16 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
                         if (app.time != NULL)
                         {
                             result = fscanf(handle, " %2hu:%2hu", &(app.time->hour), &(app.time->minute));
-                            if (ferror(handle) != 0 || feof(handle) != 0 || result != 2)
+                            if (ferror(handle) != 0 || feof(handle) != 0) // Auf result != 2 wird nicht geprüft, denn Time darf auch leer sein!
                             {
                                 freeAppointment(&app);
                                 return 0; // Fehler oder Ende der Datei. Beides nicht erlaubt.
+                            }
+
+                            if (result != 2)
+                            {
+                                // Zeit konnte nicht eingelesen werden, aber ist ja nur optional, also lösch die Zeit wieder
+                                SAFE_FREE(app.time);
                             }
 
                             // Das einzige erlaubte Tag ist hier </Time>
@@ -337,10 +346,24 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
                         // Den Ort einlesen
                         sprintf(format, " %%%hu[^<\n]", maxLen);
                         result = fscanf(handle, format, str);
-                        if (ferror(handle) != 0 || feof(handle) != 0 || result != 1)
+                        if (ferror(handle) != 0 || feof(handle) != 0) // Auf result != 1 wird nicht geprüft, denn der Ort darf auch leer sein!
                         {
                             freeAppointment(&app);
                             return 0; // Fehler oder Ende der Datei. Beides nicht erlaubt.
+                        }
+
+                        if (result == 1)
+                        {
+                            // Nur wenn auch ein Ort eingelesen wurde, darf auch Speicher reserviert werden.
+                            // Ort ist optional, deshalb wird dieser Schritt hier nicht immer ausgeführt, was auch in Ordnung ist.
+                            app.location = calloc(strlen(str) + 1, sizeof(char));
+                            if (app.location != NULL)
+                                strcpy(app.location, str);
+                            else
+                            {
+                                freeAppointment(&app);
+                                return 0;
+                            }
                         }
 
                         // Das einzige erlaubte Tag ist hier </Location>
@@ -349,15 +372,6 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
                         {
                             freeAppointment(&app);
                             return 0; // Fehler oder Ende der Datei. Beides nicht erlaubt.
-                        }
-
-                        app.location = calloc(strlen(str) + 1, sizeof(char));
-                        if (app.time != NULL)
-                            strcpy(app.location, str);
-                        else
-                        {
-                            freeAppointment(&app);
-                            return 0;
                         }
                     }
                     else
@@ -375,10 +389,18 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
                         if (app.duration != NULL)
                         {
                             result = fscanf(handle, " %2hu:%2hu", &(app.duration->hour), &(app.duration->minute));
-                            if (ferror(handle) != 0 || feof(handle) != 0 || result != 2)
+                            if (ferror(handle) != 0 || feof(handle) != 0) // Auf result != 2 wird nicht geprüft, denn Duration darf auch leer sein!
                             {
                                 freeAppointment(&app);
                                 return 0; // Fehler oder Ende der Datei. Beides nicht erlaubt.
+                            }
+
+                            // Prüfen, ob auch eine Dauer eingelesen werden konnte.
+                            // Falls nicht, wird der Speicher wieder gelöscht. Das ist in Ordnung, denn die Dauer ist nur ein optionales Ding.
+                            if (result != 2)
+                            {
+                                //
+                                SAFE_FREE(app.duration);
                             }
 
                             // Das einzige erlaubte Tag ist hier </Time>
@@ -490,6 +512,7 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
 
         appointment->description = app.description;
         appointment->location = app.location;
+        appointment->date->dayOfWeek = app.date->dayOfWeek;
 
         return 1; // Appointment richtig eingelesen.
     }
@@ -508,8 +531,11 @@ static int loadAppointment(FILE *handle, TAppointment *appointment)
 static void freeAppointments(TAppointment *appointments, unsigned short numAppointments)
 {
     unsigned short i = 0;
+
     for (i = 0; i < numAppointments; ++i)
         freeAppointment(appointments + i);
+
+    free(appointments);
 }
 
 int loadCalendar(char const *filename)
@@ -584,17 +610,10 @@ int loadCalendar(char const *filename)
                 // Datei ist in Ordnung!
 
                 // Elemente der lokalen Termine in das globale Calendar-Array kopieren
-                AppointmentCount = numAppointments;
-                for (i = 0; i < AppointmentCount; ++i)
-                {
-                    (Calendar + i)->date        = (appointments + i)->date;
-                    (Calendar + i)->description = (appointments + i)->description;
-                    (Calendar + i)->duration    = (appointments + i)->duration;
-                    (Calendar + i)->location    = (appointments + i)->location;
-                    (Calendar + i)->time        = (appointments + i)->time;
-                }
+                for (i = 0; i < numAppointments; ++i)
+                    addAppToCalendar(appointments + i);
 
-                freeAppointments(appointments, numAppointments);
+                free(appointments);
 
                 // Termine wurden geladen.
                 return 1;
@@ -608,7 +627,7 @@ int loadCalendar(char const *filename)
         }
         else
         {
-            // AppointmentCount ist < 0, das darf nicht sein!
+            // Eingelesene AppointmentCount ist < 0, das darf nicht sein!
             fclose(handle);
             return 0;
         }

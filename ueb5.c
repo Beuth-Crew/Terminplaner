@@ -1,4 +1,4 @@
-/*
+
 #include "calendar.h"
 #include "files.h"
 #include "animation.h"
@@ -7,9 +7,10 @@
 #include <stdio.h>
 #include <assert.h>
 
+
 int main()
 {
-    char const *dbFile = "calendar.db";
+    char const *dbFile = "database/calendar.db";
     unsigned short i; // Zählvariable
     int selection; // Menüauswahl
     char const * const title = "Terminverwaltung  Ver. 0.6.1";
@@ -20,9 +21,10 @@ int main()
     menuPoints[1] = "Termin bearbeiten";
     menuPoints[2] = "Termin loeschen";
     menuPoints[3] = "Termin suchen";
-    menuPoints[4] = "Termine sortieren";
-    menuPoints[5] = "Termine auflisten";
+    menuPoints[4] = "Termine auflisten";
+    menuPoints[5] = "Sortierung auswaehlen";
     menuPoints[6] = "Programm beenden";
+    menuPoints[7] = "Programm beenden ohne zu speichern";
 
     // Kalender mit 0-Werten füllen
     for (i = 0; i < MAX_APPOINTMENTS; ++i)
@@ -50,8 +52,8 @@ int main()
             case 2: editAppointment();                              break;
             case 3: deleteAppointment();                            break;
             case 4: searchAppointment();                            break;
-            case 5: sortCalendar();                                 break;
-            case 6: listCalendar();                                 break;
+            case 5: listCalendar();                                 break;
+            case 6: sortCalendar();                                 break;
             case 7: // Termine speichern
             {
                 switch (saveCalendar(dbFile))
@@ -73,6 +75,13 @@ int main()
                         assert(0); // Das darf nicht passieren
                 }
             }
+
+            case 8:
+                break; // Tue nichts, 8 bedeutet - Programm beenden
+
+            default:
+                printf("Ungueltige Eingabe");
+                waitForEnter();
         }
     } while(selection != 7 && selection != 8);
 
@@ -82,4 +91,3 @@ int main()
     animi_out("Das Programm wird beendet", 30);
     return 0;
 }
-*/

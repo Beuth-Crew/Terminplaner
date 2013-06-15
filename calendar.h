@@ -3,6 +3,21 @@
 
 #include "datastructure.h"
 
+#define MAX_APPOINTMENTS 100
+extern unsigned short AppointmentCount;
+extern TAppointment Calendar[MAX_APPOINTMENTS];
+
+/*
+    Fügt den übergebenen Termin in den Kalender ein.
+    Die Speicherbereiche der Daten des übergebenen Termins werden nicht kopiert, sondern sie werden referenziert.
+    D.h. der Termin, der dann im Kalender drin ist, benutzt die bereits angelegten Speicherbereiche.
+    Der Speicherbereich für den Termin selbst (TAppointment*) wird aber nicht genutzt und kann nach dieser
+    Funktion theoretisch freigegeben werden.
+
+    Nachdem der Termin in den Kalender eingefügt wurde, wird der Kalender nach der (evt.) ausgewählten Sortierung neu sortiert,
+    damit der neue Termin, der am Ende des Kalenders eingefügt wird, an die richtige Stelle kommt.
+*/
+void addAppToCalendar(TAppointment *const app);
 
 void createAppointment();
 /******************************************************

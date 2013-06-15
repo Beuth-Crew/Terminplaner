@@ -24,10 +24,10 @@ int isLeapYear(int jahr);
  * CHANGES     :            -
  ******************************************************/
 
-
-// todo is noch nicht implementiert.
+// Prüft, ob die Stunden- und Minutenzahlen plausible Werte enthalten.
+// Gibt 1 bei gültiger Zeit zurück,
+// andernfalls 0.
 int isTimeValid(TTime const *time);
-
 
 int isDateValid(TDate const *date);
 /******************************************************
@@ -134,6 +134,12 @@ int getDate(char const *prompt, TDate **date);
  * CHANGES     :            -
  ******************************************************/
 
+/*
+  Untersucht das Datum, also Tag, Monat und Jahr und berechnet daraus
+  den Wochentag.
+  Gibt den Wochentag als Zahl zurück.
+  Rückgabe ist ein Wert der DayOfWeek-Aufzählung.
+*/
 DayOfWeek calculateDayOfWeek(TDate const *date);
 
 /*
@@ -152,12 +158,49 @@ DayOfWeek calculateDayOfWeek(TDate const *date);
 */
 char* weekDayToStr(char *str, unsigned short dayOfWeek, unsigned short shortForm);
 
+/*
+  Gibt in einer Zeile einen Termin aus, mit Startzeitpunkt, Endzeitpunkt, Ort und Beschreibung
+  Das Datum des Termins wird nicht ausgegeben.
+*/
 void printAppointment();
 
-int compareIntegers(int Integer1, int Integer2);
-
-
+/*
+  Gibt die übergebene Zeit auf dem Bildschirm aus.
+*/
 void printTime(TTime const *time);
-void printDate(TDate const *date);
+
+/*
+  Gibt das Datum im Format "Freitag, der 01.01.2001" aus.
+  Gibt die Anzahl der ausgegebenen Zeichen zurück.
+*/
+unsigned short printDate(TDate const *date);
+
+/*
+  Addiert die beiden übergebenen Zeiten
+  und speichert das Ergebnis in der TTime-Struktur, auf die *result zeigt.
+  Es werden nur gültige Ergebnis-Zeiten von 00:00 bis 23:59 erzeugt.
+
+  Parameter:
+    - result muss auf eine TTime-Struktur zeigen
+    - time1 darf NULL sein
+    - time2 darf auch NULL sein
+
+  Returns:
+    0 - Wenn die beiden Zeiten zusammengerechnet innerhalb der Tagesgrenze 23:59 sind.
+    1 - Wenn die beiden Zeiten zusammengerechnet die 24 Stunden sprengen.
+*/
+unsigned short addTime(TTime const *time1, TTime const *time2, TTime *result);
+
+/*
+  Tauscht die Werte der beiden übergebenen TAppointments-Structs.
+*/
+void swapAppointments(TAppointment *a1, TAppointment *a2);
+
+short cmpDates(TDate const *d1, TDate const *d2);
+short cmpTimes(TTime const *t1, TTime const *t2);
+short cmpApps_DateTime(TAppointment const *a1, TAppointment const *a2);
+short cmpApps_DurDateTime(TAppointment const *a1, TAppointment const *a2);
+short cmpApps_DescDateTime(TAppointment const *a1, TAppointment const *a2);
+short cmpApps_LocDateTime(TAppointment const *a1, TAppointment const *a2);
 
 #endif // DATEUTILS_H_INCLUDED
