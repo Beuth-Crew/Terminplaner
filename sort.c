@@ -4,6 +4,8 @@
 #include "dateutils.h"
 #include <assert.h>
 
+// todo Sortieren entfällt
+
 // Globale Variable sortierung ist dafür da,
 // damit listCalendar() weiß, wonach es die Ausgabe gruppieren soll.
 // Default ist Sort_None - Keine Sortierung ausgewählt.

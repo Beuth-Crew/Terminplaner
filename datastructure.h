@@ -22,6 +22,7 @@ typedef struct
 
 typedef struct
 {
+// todo Next- und Prev-Zeiger auf die eigene Struktur hinzufügen
     TTime *time;
     TDate *date;
     char *description;

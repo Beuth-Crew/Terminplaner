@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include "tools.h"
 
+// todo
+// Funktionen anpassen an die Liste
+
 static unsigned short const maxLen = 255; // Maximale erlaubte Länge für einen XML-Bezeichner.
 
 /*

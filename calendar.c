@@ -16,6 +16,11 @@
 unsigned short AppointmentCount = 0;
 TAppointment Calendar[MAX_APPOINTMENTS];
 
+// todo
+// Funktionen anpassen
+// (neuen Termin eingeben, Terminliste ausgeben und bei Programmende wieder alle Termine loÌˆschen)
+
+
 void addAppToCalendar(TAppointment *const app)
 {
     TAppointment *newApp = Calendar + AppointmentCount;
@@ -251,12 +256,12 @@ void sortCalendar()
 
 void listCalendar()
 {
-    unsigned short const lineLen = 79; // Länge einer Zeile, bestimmt Strichlänge
+    unsigned short const lineLen = 79; // LÃ¤nge einer Zeile, bestimmt StrichlÃ¤nge
     char const *headline = "Termine";
     unsigned short ugApp; // Untergrenze einer Gruppe von Terminen. ugApp ist ein Index im Calendar-Array.
-    unsigned short curApp; // Index, bei welchem Termin wir gerade sind. Für Iteration
-    unsigned short numAppsPrinted = 0; // Wird zum Zählen verwendet. Nach je 15 Terminen wird waitForEnter() aufgerufen.
-    unsigned short dateLen; // Zeichenlänge des ausgegebenen Datums, wird benötigt, um die Linie unter dem Datum genauso lang zu machen.
+    unsigned short curApp; // Index, bei welchem Termin wir gerade sind. FÃ¼r Iteration
+    unsigned short numAppsPrinted = 0; // Wird zum ZÃ¤hlen verwendet. Nach je 15 Terminen wird waitForEnter() aufgerufen.
+    unsigned short dateLen; // ZeichenlÃ¤nge des ausgegebenen Datums, wird benÃ¶tigt, um die Linie unter dem Datum genauso lang zu machen.
 
     clearScreen();
     printf("%s\n", headline);
@@ -296,15 +301,15 @@ void listCalendar()
         printLine('-', lineLen); // Diese Zeile trennt die einzelnen Daten voneinander
 
         dateLen = printDate((Calendar + ugApp)->date);
-        printLine('-', dateLen); // Unterstreichung für das Datum
+        printLine('-', dateLen); // Unterstreichung fÃ¼r das Datum
 
-        // Daten ausgeben, die zur Datumsgruppe gehören (bei 15 wird gestoppt)
+        // Daten ausgeben, die zur Datumsgruppe gehÃ¶ren (bei 15 wird gestoppt)
         while (curApp < AppointmentCount)
         {
             // Wurden bereits 15 Termine ausgegeben?
             if (numAppsPrinted >= 15)
             {
-                numAppsPrinted = 0; // Auf 0 zurücksetzen, damit der Zähler wieder bis 15 gehen kann.
+                numAppsPrinted = 0; // Auf 0 zurÃ¼cksetzen, damit der ZÃ¤hler wieder bis 15 gehen kann.
                 waitForEnter();
                 break; // Die Gruppierung wird hiermit beendet.
             }
@@ -313,7 +318,7 @@ void listCalendar()
                 break; // Daten sind nicht gleich
 
             // Termin ausgeben
-            printf("   "); // Einrückung
+            printf("   "); // EinrÃ¼ckung
             printAppointment(Calendar + curApp);
 
             ++numAppsPrinted;
