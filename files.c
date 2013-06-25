@@ -8,9 +8,6 @@
 #include <stdio.h>
 #include "tools.h"
 
-// todo
-// Funktionen anpassen an die Liste
-
 static unsigned short const maxLen = 255; // Maximale erlaubte Länge für einen XML-Bezeichner.
 
 /*
@@ -99,7 +96,7 @@ int saveCalendar(char const * filename)
 {
     char tmpStr[100]; // for strings to be written to file
     FILE *handle;
-    unsigned short i; // Zählvariable
+    TAppointment *cur; // Zählvariable
     unsigned short fehler; // 0 - kein Fehler, 1 - Nicht alle Termine gespeichert
 
     handle = fopen(filename, "wt");
@@ -121,9 +118,9 @@ int saveCalendar(char const * filename)
         }
 
         // Termine speichern
-        for (i = 0; i < AppointmentCount; ++i)
+        for (cur = First; cur != NULL; cur = cur->Next)
         {
-            if (saveAppointment(handle, Calendar + i) == 0)
+            if (saveAppointment(handle, cur) == 0)
                 fehler = 1;
         }
 

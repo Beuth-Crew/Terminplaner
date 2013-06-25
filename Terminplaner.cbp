@@ -81,6 +81,9 @@
 		<Unit filename="ueb5.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="ueb6.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
