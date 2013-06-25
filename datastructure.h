@@ -20,14 +20,16 @@ typedef struct
     DayOfWeek dayOfWeek;
 } TDate;
 
-typedef struct
+typedef struct sAppointment
 {
-// todo Next- und Prev-Zeiger auf die eigene Struktur hinzufügen
+//      Next- und Prev-Zeiger auf die eigene Struktur hinzugefügt
     TTime *time;
     TDate *date;
     char *description;
     TTime *duration;
     char *location;
+    struct sAppointment *next;
+    struct sAppointment *prev;
 } TAppointment;
 
 #endif // DATASTRUCTURE_H_INCLUDED

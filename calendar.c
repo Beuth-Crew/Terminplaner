@@ -13,13 +13,15 @@
 #include "sort.h"
 
 // Globale Variablen (pfui)
-unsigned short AppointmentCount = 0;
-TAppointment Calendar[MAX_APPOINTMENTS];
+//unsigned short AppointmentCount = 0;
+//TAppointment Calendar[MAX_APPOINTMENTS];
 
 // todo
 // Funktionen anpassen
 // (neuen Termin eingeben, Terminliste ausgeben und bei Programmende wieder alle Termine löschen)
 
+TAppointment *First = NULL;
+TAppointment *Last = NULL;
 
 void addAppToCalendar(TAppointment *const app)
 {
