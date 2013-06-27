@@ -11,7 +11,6 @@
 int main()
 {
     char const *dbFile = "database/calendar.db";
-    unsigned short i; // Zählvariable
     int selection; // Menüauswahl
     char const * const title = "Terminverwaltung  Ver. 0.9";
 
@@ -24,16 +23,6 @@ int main()
     menuPoints[4] = "Termine auflisten";
     menuPoints[5] = "Programm beenden";
     menuPoints[6] = "Programm beenden ohne zu speichern";
-
-    // Kalender mit 0-Werten füllen
-    for (i = 0; i < MAX_APPOINTMENTS; ++i)
-    {
-        Calendar[i].date = NULL;
-        Calendar[i].time = NULL;
-        Calendar[i].description = NULL;
-        Calendar[i].duration = NULL;
-        Calendar[i].location = NULL;
-    }
 
     // Termine aus DB laden
     if (loadCalendar(dbFile) == 0)

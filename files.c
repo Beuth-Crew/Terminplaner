@@ -98,6 +98,11 @@ int saveCalendar(char const * filename)
     FILE *handle;
     TAppointment *cur; // Zählvariable
     unsigned short fehler; // 0 - kein Fehler, 1 - Nicht alle Termine gespeichert
+    unsigned short appointmentCount = 0;
+
+    // Zählen, wie viele Elemente in der Liste sind.
+    for (cur = First; cur != NULL; cur = cur->Next)
+        ++appointmentCount;
 
     handle = fopen(filename, "wt");
     if (handle != NULL)
@@ -109,7 +114,7 @@ int saveCalendar(char const * filename)
             return 1;
         }
 
-        sprintf(tmpStr, "\t<AppointmentCount>%hu</AppointmentCount>\n", AppointmentCount);
+        sprintf(tmpStr, "\t<AppointmentCount>%hu</AppointmentCount>\n", appointmentCount);
         if (fwriteStr(handle, tmpStr) == 0)
         {
             fclose(handle);
