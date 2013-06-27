@@ -28,8 +28,8 @@ typedef struct sAppointment
     char *description;
     TTime *duration;
     char *location;
-    struct sAppointment *next;
-    struct sAppointment *prev;
+    struct sAppointment *Next;
+    struct sAppointment *Prev;
 } TAppointment;
 
 #endif // DATASTRUCTURE_H_INCLUDED

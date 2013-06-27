@@ -1,6 +1,8 @@
 
 #include "list.h"
 #include "calendar.h"
+#include "datastructure.h"
+#include <stdio.h>
 
 // todo
 // insertInList (zum sortierten Einfügen in die verkettete Liste) sowie

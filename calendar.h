@@ -13,6 +13,8 @@ extern unsigned short AppointmentCount;
 // extern TAppointment *First, *Last;
 extern TAppointment Calendar[MAX_APPOINTMENTS];
 
+extern TAppointment *First;
+extern TAppointment *Last;
 /*
     Fügt den übergebenen Termin in den Kalender ein.
     Die Speicherbereiche der Daten des übergebenen Termins werden nicht kopiert, sondern sie werden referenziert.

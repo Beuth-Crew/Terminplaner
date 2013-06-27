@@ -20,6 +20,7 @@
 // Funktionen anpassen
 // (neuen Termin eingeben, Terminliste ausgeben und bei Programmende wieder alle Termine löschen)
 
+
 TAppointment *First = NULL;
 TAppointment *Last = NULL;
 
